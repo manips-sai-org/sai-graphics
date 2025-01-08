@@ -75,6 +75,9 @@ static void loadVisualtoGenericObject(
 	const auto geom_type = visual_ptr->geometry->type;
 	auto tmp_mmesh = new cMultiMesh();
 	auto tmp_mesh = new cMesh();
+	if(color && color->getA() < 1.0){
+		tmp_mesh->setUseTransparency(true);
+	}
 	if (geom_type == SaiUrdfreader::Geometry::MESH) {
 		// downcast geometry ptr to mesh type
 		const auto mesh_ptr = dynamic_cast<const SaiUrdfreader::Mesh*>(
