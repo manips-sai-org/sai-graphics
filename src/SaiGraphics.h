@@ -20,6 +20,10 @@
 
 namespace SaiGraphics {
 
+/**
+ * @brief Structure to store the attachment of a camera to a link or object
+ *
+ */
 struct CameraLinkAttachment {
 	std::string model_name;
 	std::string link_name;	// empty if object
@@ -33,6 +37,10 @@ struct CameraLinkAttachment {
 		  pose_in_link(pose_in_link) {}
 };
 
+/**
+ * @brief Class that represents a visual model of the virtual world.
+ *
+ */
 class SaiGraphics {
 public:
 	/**
@@ -44,10 +52,13 @@ public:
 	 * the terminal or not.
 	 */
 	SaiGraphics(const std::string& path_to_world_file,
-				 const std::string& window_name = "sai world",
-				 bool verbose = false);
+				const std::string& window_name = "sai world",
+				bool verbose = false);
 
-	// dtor
+	/**
+	 * @brief Destructor
+	 *
+	 */
 	~SaiGraphics();
 
 	/**
@@ -65,6 +76,10 @@ public:
 	 */
 	bool isWindowOpen() { return !glfwWindowShouldClose(_window); }
 
+	/**
+	 * @brief Call this function to render a black screen in the window
+	 *
+	 */
 	void renderBlackScreen();
 
 	/**
@@ -237,8 +252,6 @@ public:
 	 */
 	Eigen::Affine3d getCameraPose(const std::string& camera_name);
 
-	// convention: Z forward, X right
-
 	/**
 	 * @brief Attach a camera to a robot link such that the camera moves
 	 * automatically with said link. The pose of the camera cannot be set via
@@ -310,7 +323,8 @@ public:
 	 *
 	 * @param rendering_enabled true to enable rendering, false to disable
 	 * @param robot_or_object_name name of the robot or object
-	 * @param link_name name of the link to render or not. Leave empty to apply to all links.
+	 * @param link_name name of the link to render or not. Leave empty to apply
+	 * to all links.
 	 */
 	void setRenderingEnabled(const bool rendering_enabled,
 							 const string robot_or_object_name,
@@ -340,8 +354,19 @@ public:
 	bool cameraExistsInWorld(const std::string& camera_name) const;
 
 private:
+	/**
+	 * @brief Initialize the world with the given world file
+	 *
+	 * @param path_to_world_file path to the world file
+	 * @param verbose print info to terminal or not
+	 */
 	void initializeWorld(const std::string& path_to_world_file,
 						 const bool verbose);
+
+	/**
+	 * @brief clears the world and all the objects in it
+	 *
+	 */
 	void clearWorld();
 
 	/**
@@ -395,29 +420,52 @@ private:
 	chai3d::cCamera* getCamera(const std::string& camera_name);
 
 	/**
-	 * internal functions to find link
+	 * @brief find the link object in the parent link recursively (called by the
+	 * findLink function)
+	 *
+	 * @param parent parent link
+	 * @param link_name name of the link to find
+	 * @return chai3d::cRobotLink* pointer to the found link (or null pointer if
+	 * not found)
 	 */
 	chai3d::cRobotLink* findLinkObjectInParentLinkRecursive(
 		chai3d::cRobotLink* parent, const std::string& link_name);
 
+	/**
+	 * @brief find the link defined by the robot and link name
+	 *
+	 * @param robot_name the name of the robot in which to find the link
+	 * @param link_name the name of the link to find
+	 * @return chai3d::cRobotLink* the pointer to the link object (the function
+	 * throws an error if the link is not found)
+	 */
 	chai3d::cRobotLink* findLink(const std::string& robot_name,
 								 const std::string& link_name);
 
+	/**
+	 * @brief Enable or disable the rendering of the link frames in a given object and its children
+	 * 
+	 * @param parent the initial object on which to show the frames
+	 * @param show_frame whether to show or hide the frames
+	 * @param frame_pointer_length the length of the arrow representing the frame
+	 */
 	void showLinkFrameRecursive(chai3d::cRobotLink* parent, bool show_frame,
 								const double frame_pointer_length);
 
+	/**
+	 * @brief finds a given force sensor display object the vector of force sensor
+	 * 
+	 * @param robot_or_object_name the name of the robot or object to which the sensor is attached
+	 * @param link_name the name of the link to which the sensor is attached
+	 * @return int the index of the force sensor display object in the vector (or -1 if not found)
+	 */
 	int findForceSensorDisplay(const std::string& robot_or_object_name,
 							   const std::string& link_name) const;
 
-	/**
-	 * @brief Internal cWorld object.
-	 */
+	/// @brief pointer to the chai3d world
 	chai3d::cWorld* _world;
 
-	/**
-	 * @brief glfw window
-	 *
-	 */
+	/// @brief pointer to the glfw window
 	GLFWwindow* _window;
 
 	/**
@@ -427,47 +475,41 @@ private:
 	 */
 	std::vector<std::shared_ptr<UIForceWidget>> _ui_force_widgets;
 
+	/// @brief flag to know if a right click interaction is occurring
 	bool _right_click_interaction_occurring;
 
-	/**
-	 * @brief maps from robot names to filename and from robot names to robot
-	 * models
-	 *
-	 */
+	/// @brief maps from robot names to filename
 	std::map<std::string, std::string> _robot_filenames;
+	/// @brief maps from robot names to robot models
 	std::map<std::string, std::shared_ptr<SaiModel::SaiModel>> _robot_models;
-
+	/// @brief maps from dynamic object names to pose
 	std::map<std::string, std::shared_ptr<Eigen::Affine3d>> _dyn_objects_pose;
+	/// @brief maps from dynamic object names to velocity
 	std::map<std::string, std::shared_ptr<Eigen::Vector6d>> _object_velocities;
-
+	/// @brief maps from static object names to pose
 	std::map<std::string, std::shared_ptr<Eigen::Affine3d>>
 		_static_objects_pose;
 
-	/**
-	 * @brief force sensor displays
-	 *
-	 */
+	/// @brief vector of force sensor displays
 	std::vector<std::shared_ptr<ForceSensorDisplay>> _force_sensor_displays;
 
-	/**
-	 * @brief vector of camera names in the world and current camera index
-	 *
-	 */
+	/// @brief vector of camera names in the world
 	std::vector<std::string> _camera_names;
+	/// @brief index of the current camera beind rendered in the window
+	int _current_camera_index;
+	/// @brief maps from camera names to frame buffers for headless rendering
 	std::map<std::string, chai3d::cFrameBufferPtr> _camera_frame_buffers;
+	/// @brief maps from camera names to camera link attachments cameras attached to an object or robot
 	std::map<std::string, std::shared_ptr<CameraLinkAttachment>>
 		_camera_link_attachments;
-	int _current_camera_index;
 
-	/**
-	 * @brief used to store the last cursor position
-	 * useful when interacting with the window to move the camera
-	 *
-	 */
+	/// @brief last cursor x position
 	double _last_cursorx;
+	/// @brief last cursor y position
 	double _last_cursory;
-
+	/// @brief width of the window
 	int _window_width;
+	/// @brief height of the window
 	int _window_height;
 };
 

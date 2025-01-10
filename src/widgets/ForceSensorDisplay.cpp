@@ -69,9 +69,4 @@ void ForceSensorDisplay::update(const Eigen::Vector3d& force_global_frame,
 	_display_line_moment->setShowEnabled(true);
 }
 
-void ForceSensorDisplay::hideLines() {
-	_display_line_force->setShowEnabled(false);
-	_display_line_force->setShowEnabled(false);
-}
-
 }  // namespace SaiGraphics
