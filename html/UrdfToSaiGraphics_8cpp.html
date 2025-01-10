@@ -126,7 +126,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a9ce8cf7ab3142f9854f28a0364023040" id="r_a9ce8cf7ab3142f9854f28a0364023040"><td class="memItemLeft" align="right" valign="top"><a id="a9ce8cf7ab3142f9854f28a0364023040" name="a9ce8cf7ab3142f9854f28a0364023040"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Parser::UrdfToSaiGraphicsWorld</b> (const std::string &amp;filename, chai3d::cWorld *world, std::map&lt; std::string, std::string &gt; &amp;robot_filenames, std::map&lt; std::string, std::shared_ptr&lt; Eigen::Affine3d &gt; &gt; &amp;dyn_object_poses, std::map&lt; std::string, std::shared_ptr&lt; Eigen::Affine3d &gt; &gt; &amp;static_object_poses, std::map&lt; std::string, cFrameBufferPtr &gt; &amp;camera_frame_buffers, bool verbose)</td></tr>
 <tr class="separator:a9ce8cf7ab3142f9854f28a0364023040"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a843a5736d69665a821f2f911444e72fe" id="r_a843a5736d69665a821f2f911444e72fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="UrdfToSaiGraphics_8cpp.html#a843a5736d69665a821f2f911444e72fe">Parser::UrdfToSaiGraphicsRobot</a> (const std::string &amp;filename, <a class="el" href="classchai3d_1_1cRobotBase.html">chai3d::cRobotBase</a> *base, bool verbose, const std::string &amp;working_dirname=&quot;./&quot;)</td></tr>
+<tr class="memitem:a843a5736d69665a821f2f911444e72fe" id="r_a843a5736d69665a821f2f911444e72fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="UrdfToSaiGraphics_8cpp.html#a843a5736d69665a821f2f911444e72fe">Parser::UrdfToSaiGraphicsRobot</a> (const std::string &amp;filename, chai3d::cRobotBase *base, bool verbose, const std::string &amp;working_dirname=&quot;./&quot;)</td></tr>
 <tr class="memdesc:a843a5736d69665a821f2f911444e72fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a URDF file and populate a single chai3d robot model from it.  <br /></td></tr>
 <tr class="separator:a843a5736d69665a821f2f911444e72fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -148,7 +148,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Parser::UrdfToSaiGrap
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classchai3d_1_1cRobotBase.html">chai3d::cRobotBase</a> *&#160;</td>
+          <td class="paramtype">chai3d::cRobotBase *&#160;</td>
           <td class="paramname"><em>base</em>, </td>
         </tr>
         <tr>
@@ -175,7 +175,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Parser::UrdfToSaiGrap
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>URDF robot model file to parse. </td></tr>
-    <tr><td class="paramname">model</td><td><a class="el" href="classchai3d_1_1cRobotBase.html">chai3d::cRobotBase</a> model to populate from parsed file. </td></tr>
+    <tr><td class="paramname">model</td><td>chai3d::cRobotBase model to populate from parsed file. </td></tr>
     <tr><td class="paramname">verbose</td><td>To display information about the robot model creation in the terminal or not. </td></tr>
     <tr><td class="paramname">working_dirname</td><td>Directory path relative to which paths within the model file are specified. </td></tr>
   </table>
