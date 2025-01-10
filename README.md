@@ -19,6 +19,15 @@ cd build/examples/01-parse_world_and_robot
 ./01-parse_world_and_robot
 ```
 
+## Documentation
+The documentation can also be accessed online at the following [link](https://manips-sai-org.github.io/sai-graphics/)
+
+It can also be generated locally with doxygen:
+```
+cd docs
+doxygen
+```
+
 ## Note on supported graphics files
 
 SAI graphics rendering supports visuals defined by primitive shapes (box, shpere, cylinder) and the following mesh file formats:
