@@ -867,9 +867,9 @@ void SaiGraphics::updateRobotGraphics(
 void SaiGraphics::updateObjectGraphics(
 	const std::string& object_name, const Eigen::Affine3d& object_pose,
 	const Eigen::Vector6d& object_velocity) {
-	if (!dynamicObjectExistsInWorld(object_name)) {
+	if (!dynamicObjectExistsInWorld(object_name) && !staticObjectExistsInWorld(object_name)) {
 		throw std::invalid_argument(
-			"dynamic object not found in SaiGraphics::updateObjectGraphics");
+			"object not found in SaiGraphics::updateObjectGraphics");
 	}
 	cGenericObject* object = NULL;
 	for (unsigned int i = 0; i < _world->getNumChildren(); ++i) {
@@ -888,8 +888,13 @@ void SaiGraphics::updateObjectGraphics(
 	}
 
 	// update pose
-	*_dyn_objects_pose.at(object_name) = object_pose;
-	*_object_velocities.at(object_name) = object_velocity;
+	if (dynamicObjectExistsInWorld(object_name)) {
+		*_dyn_objects_pose.at(object_name) = object_pose;
+		*_object_velocities.at(object_name) = object_velocity;
+	}
+	else if (staticObjectExistsInWorld(object_name)) {
+		*_static_objects_pose.at(object_name) = object_pose;
+	}
 	object->setLocalPos(object_pose.translation());
 	object->setLocalRot(object_pose.rotation());
 }
