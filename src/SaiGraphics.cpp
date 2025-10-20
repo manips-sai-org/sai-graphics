@@ -1416,4 +1416,19 @@ namespace SaiGraphics
 		multi_segment->setUseDisplayList(true);
 	}
 
+	void SaiGraphics::setBackgroundImage(const std::string &image_path)
+	{
+		chai3d::cCamera *camera = getCamera("camera_fixed");
+		chai3d::cBackground *background = new cBackground();
+		camera->m_backLayer->addChild(background);
+
+		// load a texture file
+		bool fileload;
+		fileload = background->loadFromFile(image_path);
+		if (!fileload)
+		{
+			cout << "Error - Image failed to load correctly." << endl;
+		}
+	}
+
 } // namespace SaiGraphics
