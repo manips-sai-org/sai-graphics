@@ -360,7 +360,9 @@ namespace SaiGraphics
 		/// @brief returns true if the camera exists in the world, false otherwise
 		bool cameraExistsInWorld(const std::string &camera_name) const;
 
-		void createMultiSegment(const std::vector<Eigen::Vector3d> &points);
+		chai3d::cMultiSegment *createMultiSegment(const std::vector<Eigen::Vector3d> &points, chai3d::cColorf color);
+
+		void updateMultiSegment(chai3d::cMultiSegment *multi_segment, const Eigen::Vector3d &point, chai3d::cColorf color);
 
 	private:
 		/**

@@ -1354,7 +1354,7 @@ namespace SaiGraphics
 	}
 
 	// this function takes as input a list of eigen:Vector3d points and creates a chai3d cMultiSegment
-	void SaiGraphics::createMultiSegment(const std::vector<Eigen::Vector3d> &points)
+	chai3d::cMultiSegment *SaiGraphics::createMultiSegment(const std::vector<Eigen::Vector3d> &points, chai3d::cColorf color)
 	{
 		// create a new chai3d multi-segment
 		auto *multi_segment = new chai3d::cMultiSegment();
@@ -1377,11 +1377,38 @@ namespace SaiGraphics
 		multi_segment->setLocalPos(0.0, 0.0, 0.0);
 
 		// set segment properties
-		cColorf color;
-		color.setYellowGold();
 		multi_segment->setLineColor(color);
 		multi_segment->setLineWidth(4.0);
+
+		// use display list to optimize graphic rendering performance
 		multi_segment->setUseDisplayList(true);
+		return multi_segment;
+	}
+
+	void SaiGraphics::updateMultiSegment(chai3d::cMultiSegment *multi_segment, const Eigen::Vector3d &point, chai3d::cColorf color)
+	{
+		int numVertices = multi_segment->m_vertices->getNumElements();
+
+		if (numVertices == 0)
+		{
+			return;
+		}
+
+		chai3d::cVector3d last_vertex = multi_segment->m_vertices->getLocalPos(numVertices - 1);
+
+		// add each point to the multi-segment
+		// create vertex 0
+		int index0 = multi_segment->newVertex(last_vertex(0), last_vertex(1), last_vertex(2));
+
+		// create vertex 1
+		int index1 = multi_segment->newVertex(point(0), point(1), point(2));
+
+		// create segment
+		multi_segment->newSegment(index0, index1);
+
+		// set segment properties
+		multi_segment->setLineColor(color);
+		multi_segment->setLineWidth(4.0);
 
 		// use display list to optimize graphic rendering performance
 		multi_segment->setUseDisplayList(true);
