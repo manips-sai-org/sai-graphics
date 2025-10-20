@@ -1358,7 +1358,7 @@ namespace SaiGraphics
 	{
 		// create a new chai3d multi-segment
 		auto *multi_segment = new chai3d::cMultiSegment();
-		cout << "Test" << endl;
+		cout << "Tet" << endl;
 
 		// add each point to the multi-segment
 		for (const auto &point : points)
