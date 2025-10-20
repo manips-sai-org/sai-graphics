@@ -1385,7 +1385,7 @@ namespace SaiGraphics
 		return multi_segment;
 	}
 
-	void SaiGraphics::updateMultiSegment(chai3d::cMultiSegment *multi_segment, const Eigen::Vector3d &point, chai3d::cColorf color)
+	void SaiGraphics::updateMultiSegment(chai3d::cMultiSegment *multi_segment, const Eigen::Vector3d &point, chai3d::cColorf color, bool segment_creation)
 	{
 		int numVertices = multi_segment->m_vertices->getNumElements();
 
@@ -1403,9 +1403,11 @@ namespace SaiGraphics
 		// create vertex 1
 		int index1 = multi_segment->newVertex(point(0), point(1), point(2));
 
-		// create segment
-		multi_segment->newSegment(index0, index1);
-
+		if (segment_creation)
+		{
+			// create segment
+			multi_segment->newSegment(index0, index1);
+		}
 		// set segment properties
 		multi_segment->setLineColor(color);
 		multi_segment->setLineWidth(4.0);

@@ -362,7 +362,7 @@ namespace SaiGraphics
 
 		chai3d::cMultiSegment *createMultiSegment(const std::vector<Eigen::Vector3d> &points, chai3d::cColorf color);
 
-		void updateMultiSegment(chai3d::cMultiSegment *multi_segment, const Eigen::Vector3d &point, chai3d::cColorf color);
+		void updateMultiSegment(chai3d::cMultiSegment *multi_segment, const Eigen::Vector3d &point, chai3d::cColorf color, bool segment_creation);
 
 	private:
 		/**
