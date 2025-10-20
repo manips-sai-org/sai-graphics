@@ -1358,15 +1358,33 @@ namespace SaiGraphics
 	{
 		// create a new chai3d multi-segment
 		auto *multi_segment = new chai3d::cMultiSegment();
-
-		// add each point to the multi-segment
-		for (const auto &point : points)
-		{
-			multi_segment->addPoint(chai3d::cVector3d(point));
-		}
-
 		// add the multi-segment to the world
 		_world->addChild(multi_segment);
+
+		// add each point to the multi-segment
+		for (int i = 0; i < points.size() - 1; i++)
+		{
+			// create vertex 0
+			int index0 = multi_segment->newVertex(points[i](0), points[i](1), points[i](2));
+
+			// create vertex 1
+			int index1 = multi_segment->newVertex(points[i + 1](0), points[i + 1](1), points[i + 1](2));
+
+			// create segment
+			multi_segment->newSegment(index0, index1);
+		}
+		// position object
+		multi_segment->setLocalPos(0.0, 0.0, 0.0);
+
+		// set segment properties
+		cColorf color;
+		color.setYellowGold();
+		multi_segment->setLineColor(color);
+		multi_segment->setLineWidth(4.0);
+		multi_segment->setUseDisplayList(true);
+
+		// use display list to optimize graphic rendering performance
+		multi_segment->setUseDisplayList(true);
 	}
 
 } // namespace SaiGraphics

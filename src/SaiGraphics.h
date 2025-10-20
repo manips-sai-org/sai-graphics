@@ -360,6 +360,8 @@ namespace SaiGraphics
 		/// @brief returns true if the camera exists in the world, false otherwise
 		bool cameraExistsInWorld(const std::string &camera_name) const;
 
+		void createMultiSegment(const std::vector<Eigen::Vector3d> &points);
+
 	private:
 		/**
 		 * @brief Initialize the world with the given world file
@@ -468,8 +470,6 @@ namespace SaiGraphics
 		 */
 		int findForceSensorDisplay(const std::string &robot_or_object_name,
 								   const std::string &link_name) const;
-
-		void SaiGraphics::createMultiSegment(const std::vector<Eigen::Vector3d> &points);
 
 		/// @brief pointer to the chai3d world
 		chai3d::cWorld *_world;
