@@ -50,6 +50,14 @@ namespace
 		{GLFW_KEY_LEFT_SHIFT, std::make_pair(false, true)},
 		{GLFW_KEY_LEFT_ALT, std::make_pair(false, true)},
 		{GLFW_KEY_LEFT_CONTROL, std::make_pair(false, true)},
+		{GLFW_KEY_G, {false, true}},
+		{GLFW_KEY_U, {false, true}},
+		{GLFW_KEY_H, {false, true}},
+		{GLFW_KEY_J, {false, true}},
+		{GLFW_KEY_K, {false, true}},
+		{GLFW_KEY_C, {false, true}},
+		{GLFW_KEY_M, {false, true}},
+		{GLFW_KEY_F, {false, true}},
 	};
 
 	std::unordered_map<int, std::pair<bool, bool>> mouse_button_presses_map = {
@@ -103,25 +111,49 @@ namespace
 	}
 
 	// callback when a key is pressed
-	void keySelect(GLFWwindow *window, int key, int scancode, int action,
-				   int mods)
+	// void keySelect(GLFWwindow *window, int key, int scancode, int action,
+	// 			   int mods)
+	// {
+	// 	bool set = (action != GLFW_RELEASE);
+	// 	if (key == GLFW_KEY_ESCAPE)
+	// 	{
+	// 		// handle esc separately to exit application
+	// 		glfwSetWindowShouldClose(window, GL_TRUE);
+	// 	}
+	// 	else
+	// 	{
+	// 		if (key_presses_map.count(key) > 0)
+	// 		{
+	// 			key_presses_map.at(key).first = set;
+	// 			if (!set)
+	// 			{
+	// 				key_presses_map.at(key).second = true;
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	void keySelect(GLFWwindow *window, int key, int scancode, int action, int mods)
 	{
-		bool set = (action != GLFW_RELEASE);
 		if (key == GLFW_KEY_ESCAPE)
 		{
-			// handle esc separately to exit application
 			glfwSetWindowShouldClose(window, GL_TRUE);
+			return;
 		}
-		else
+
+		// Track only known keys
+		if (key_presses_map.count(key) == 0)
+			return;
+
+		if (action == GLFW_PRESS)
 		{
-			if (key_presses_map.count(key) > 0)
-			{
-				key_presses_map.at(key).first = set;
-				if (!set)
-				{
-					key_presses_map.at(key).second = true;
-				}
-			}
+			key_presses_map[key].first = true;	 // key is now pressed
+			key_presses_map[key].second = false; // not yet consumed
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			key_presses_map[key].first = false; // released
+												// don't reset second here — we reset it after consuming
 		}
 	}
 
@@ -1429,6 +1461,29 @@ namespace SaiGraphics
 		{
 			cout << "Error - Image failed to load correctly." << endl;
 		}
+	}
+
+	bool SaiGraphics::is_pressed(int key) const
+	{
+		if (key_presses_map.count(key) > 0)
+			return key_presses_map.at(key).first;
+		if (mouse_button_presses_map.count(key) > 0)
+			return mouse_button_presses_map.at(key).first;
+		return false;
+	}
+
+	bool SaiGraphics::key_pressed_once(int key)
+	{
+		if (key_presses_map.count(key) == 0)
+			return false;
+
+		auto &state = key_presses_map[key];
+		if (state.first && !state.second)
+		{
+			state.second = true; // mark as consumed
+			return true;
+		}
+		return false;
 	}
 
 } // namespace SaiGraphics

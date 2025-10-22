@@ -77,7 +77,10 @@ namespace SaiGraphics
 		/**
 		 * @brief returns true is the window is open and should stay open
 		 */
-		bool isWindowOpen() { return !glfwWindowShouldClose(_window); }
+		bool isWindowOpen()
+		{
+			return !glfwWindowShouldClose(_window);
+		}
 
 		/**
 		 * @brief Call this function to render a black screen in the window
@@ -365,6 +368,10 @@ namespace SaiGraphics
 		chai3d::cMultiSegment *createMultiSegment(const std::vector<Eigen::Vector3d> &points, chai3d::cColorf color);
 
 		void updateMultiSegment(chai3d::cMultiSegment *multi_segment, const Eigen::Vector3d &point, chai3d::cColorf color, bool segment_creation);
+
+		bool is_pressed(int key) const;
+
+		bool key_pressed_once(int key);
 
 	private:
 		/**
