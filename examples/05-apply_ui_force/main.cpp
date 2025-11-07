@@ -15,7 +15,8 @@ const string world_file =
 const string robot_name = "RBot";
 const string object_name = "Box";
 
-int main() {
+int main()
+{
 	cout << "Loading URDF world model file: " << world_file << endl;
 
 	// load graphics scene
@@ -46,7 +47,8 @@ int main() {
 	cout << endl;
 
 	// while window is open:
-	while (graphics->isWindowOpen()) {
+	while (graphics->isWindowOpen())
+	{
 		// update robot position
 		robot_q << (double)counter / 100.0;
 
@@ -64,7 +66,8 @@ int main() {
 		ui_interaction_torques_robot = graphics->getUITorques(robot_name);
 		ui_interaction_torques_object = graphics->getUITorques(object_name);
 
-		if (counter % 50 == 0) {
+		if (counter % 50 == 0)
+		{
 			std::cout << "robot interaction torques: "
 					  << ui_interaction_torques_robot.transpose() << std::endl;
 			std::cout << "object interaction torques: "

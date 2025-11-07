@@ -94,7 +94,7 @@ namespace SaiGraphics
 		 */
 		void initializeLines(
 			chai3d::cWorld *chai_world,
-			chai3d::cColorf forceColor = chai3d::cColorf(0.68f, 1.0f, 0.18f),  // GreenYellow
+			chai3d::cColorf forceColor = chai3d::cColorf(1.0f, 0.4f, 0.0f),	   // Orange
 			chai3d::cColorf momentColor = chai3d::cColorf(0.65f, 0.16f, 0.16f) // BrownMaroon
 		);
 
