@@ -232,7 +232,7 @@ namespace SaiGraphics
 			_world->setBackgroundColor(red, green, blue);
 		}
 
-		void setBackgroundImage(const std::string &image_path);
+		void setBackgroundImage(const std::string &image_path, const std::string &camera_name);
 
 		/// @brief Returns the current camera name.
 		std::string getCurrentCameraName() const

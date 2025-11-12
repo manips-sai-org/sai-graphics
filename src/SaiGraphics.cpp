@@ -111,51 +111,51 @@ namespace
 	}
 
 	// callback when a key is pressed
-	// void keySelect(GLFWwindow *window, int key, int scancode, int action,
-	// 			   int mods)
-	// {
-	// 	bool set = (action != GLFW_RELEASE);
-	// 	if (key == GLFW_KEY_ESCAPE)
-	// 	{
-	// 		// handle esc separately to exit application
-	// 		glfwSetWindowShouldClose(window, GL_TRUE);
-	// 	}
-	// 	else
-	// 	{
-	// 		if (key_presses_map.count(key) > 0)
-	// 		{
-	// 			key_presses_map.at(key).first = set;
-	// 			if (!set)
-	// 			{
-	// 				key_presses_map.at(key).second = true;
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	void keySelect(GLFWwindow *window, int key, int scancode, int action, int mods)
+	void keySelect(GLFWwindow *window, int key, int scancode, int action,
+				   int mods)
 	{
+		bool set = (action != GLFW_RELEASE);
 		if (key == GLFW_KEY_ESCAPE)
 		{
+			// handle esc separately to exit application
 			glfwSetWindowShouldClose(window, GL_TRUE);
-			return;
 		}
-
-		// Track only known keys
-		if (key_presses_map.count(key) == 0)
-			return;
-
-		if (action == GLFW_PRESS)
+		else
 		{
-			key_presses_map[key].first = true;	 // key is now pressed
-			key_presses_map[key].second = false; // not yet consumed
-		}
-		else if (action == GLFW_RELEASE)
-		{
-			key_presses_map[key].first = false; // released
-												// don't reset second here — we reset it after consuming
+			if (key_presses_map.count(key) > 0)
+			{
+				key_presses_map.at(key).first = set;
+				if (!set)
+				{
+					key_presses_map.at(key).second = true;
+				}
+			}
 		}
 	}
+
+	// void keySelect(GLFWwindow *window, int key, int scancode, int action, int mods)
+	// {
+	// 	if (key == GLFW_KEY_ESCAPE)
+	// 	{
+	// 		glfwSetWindowShouldClose(window, GL_TRUE);
+	// 		return;
+	// 	}
+
+	// 	// Track only known keys
+	// 	if (key_presses_map.count(key) == 0)
+	// 		return;
+
+	// 	if (action == GLFW_PRESS)
+	// 	{
+	// 		key_presses_map[key].first = true;	 // key is now pressed
+	// 		key_presses_map[key].second = false; // not yet consumed
+	// 	}
+	// 	else if (action == GLFW_RELEASE)
+	// 	{
+	// 		key_presses_map[key].first = false; // released
+	// 											// don't reset second here — we reset it after consuming
+	// 	}
+	// }
 
 	// callback when a mouse button is pressed
 	void mouseClick(GLFWwindow *window, int button, int action, int mods)
@@ -1537,9 +1537,9 @@ namespace SaiGraphics
 		sphere->setLocalPos(position(0), position(1), position(2));
 	}
 
-	void SaiGraphics::setBackgroundImage(const std::string &image_path)
+	void SaiGraphics::setBackgroundImage(const std::string &image_path, const std::string &camera_name)
 	{
-		chai3d::cCamera *camera = getCamera("camera_fixed");
+		chai3d::cCamera *camera = getCamera(camera_name);
 		chai3d::cBackground *background = new cBackground();
 		camera->m_backLayer->addChild(background);
 
