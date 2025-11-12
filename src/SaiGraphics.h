@@ -369,9 +369,26 @@ namespace SaiGraphics
 
 		void updateMultiSegment(chai3d::cMultiSegment *multi_segment, const Eigen::Vector3d &point, chai3d::cColorf color, bool segment_creation);
 
+		chai3d::cMultiSegment *createLineSegment(const Eigen::Vector3d &point_start,
+												 const Eigen::Vector3d &point_end,
+												 chai3d::cColorf color, float line_width);
+
+		void updateLineSegment(chai3d::cMultiSegment *multi_segment,
+							   const Eigen::Vector3d &point_start,
+							   const Eigen::Vector3d &point_end,
+							   chai3d::cColorf color, float line_width);
+
+		chai3d::cShapeSphere *createGoalSphere(const Eigen::Vector3d &position,
+											   const double radius,
+											   chai3d::cColorf color);
+
+		void updateGoalSphere(chai3d::cShapeSphere *sphere, const Eigen::Vector3d &position);
+
 		bool is_pressed(int key) const;
 
 		bool key_pressed_once(int key);
+
+		GLFWwindow *getWindow() { return _window; }
 
 	private:
 		/**

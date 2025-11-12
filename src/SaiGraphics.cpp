@@ -691,9 +691,11 @@ namespace SaiGraphics
 
 	void SaiGraphics::renderGraphicsWorld()
 	{
+
 		// swap camera if needed
 		if (consume_first_press(NEXT_CAMERA_KEY))
 		{
+			cout << "Switching to next camera" << endl;
 			_current_camera_index =
 				(_current_camera_index + 1) % _camera_names.size();
 		}
@@ -1179,17 +1181,17 @@ namespace SaiGraphics
 			{
 				if (child->m_name == link_name)
 				{
-					ret_link = child;
-					break;
+					return child;
 				}
 				else
 				{
-					ret_link =
-						findLinkObjectInParentLinkRecursive(child, link_name);
+					cRobotLink *found = findLinkObjectInParentLinkRecursive(child, link_name);
+					if (found != NULL)
+						return found;
 				}
 			}
 		}
-		return ret_link;
+		return NULL;
 	}
 
 	cRobotLink *SaiGraphics::findLink(const std::string &robot_name,
@@ -1303,8 +1305,17 @@ namespace SaiGraphics
 		else
 		{
 			auto target_link = findLink(robot_or_object_name, link_name);
-			target_link->setFrameSize(frame_pointer_length, false);
-			target_link->setShowFrame(show_frame, false);
+			if (target_link == NULL)
+			{
+				cerr << "Could not find link " << link_name
+					 << " in robot " << robot_or_object_name
+					 << ". Cannot show frame." << endl;
+			}
+			else
+			{
+				target_link->setFrameSize(frame_pointer_length, false);
+				target_link->setShowFrame(show_frame, false);
+			}
 		}
 	}
 
@@ -1446,6 +1457,84 @@ namespace SaiGraphics
 
 		// use display list to optimize graphic rendering performance
 		multi_segment->setUseDisplayList(true);
+	}
+
+	chai3d::cMultiSegment *SaiGraphics::createLineSegment(const Eigen::Vector3d &point_start,
+														  const Eigen::Vector3d &point_end,
+														  chai3d::cColorf color, float line_width)
+	{
+		// create a new chai3d multi-segment
+		auto *multi_segment = new chai3d::cMultiSegment();
+		// add the multi-segment to the world
+		_world->addChild(multi_segment);
+
+		// create vertex 0
+		int index0 = multi_segment->newVertex(point_start(0), point_start(1), point_start(2));
+
+		// create vertex 1
+		int index1 = multi_segment->newVertex(point_end(0), point_end(1), point_end(2));
+
+		// create segment
+		multi_segment->newSegment(index0, index1);
+
+		// position object
+		multi_segment->setLocalPos(0.0, 0.0, 0.0);
+
+		// set segment properties
+		multi_segment->setLineColor(color);
+		multi_segment->setLineWidth(line_width);
+
+		// use display list to optimize graphic rendering performance
+		multi_segment->setUseDisplayList(true);
+		return multi_segment;
+	}
+
+	// now create a function to update the linesegment
+	void SaiGraphics::updateLineSegment(chai3d::cMultiSegment *multi_segment,
+										const Eigen::Vector3d &point_start,
+										const Eigen::Vector3d &point_end,
+										chai3d::cColorf color, float line_width)
+	{
+		// clear existing vertices and segments
+		multi_segment->clear();
+
+		// create vertex 0
+		int index0 = multi_segment->newVertex(point_start(0), point_start(1), point_start(2));
+
+		// create vertex 1
+		int index1 = multi_segment->newVertex(point_end(0), point_end(1), point_end(2));
+
+		// create segment
+		multi_segment->newSegment(index0, index1);
+
+		// set segment properties
+		multi_segment->setLineColor(color);
+		multi_segment->setLineWidth(line_width);
+
+		// use display list to optimize graphic rendering performance
+		multi_segment->setUseDisplayList(true);
+	}
+
+	chai3d::cShapeSphere *SaiGraphics::createGoalSphere(const Eigen::Vector3d &position,
+														const double radius,
+														chai3d::cColorf color)
+	{
+		auto *sphere = new chai3d::cShapeSphere(radius);
+		_world->addChild(sphere);
+
+		sphere->setLocalPos(position(0), position(1), position(2));
+
+		sphere->m_material->setColor(color);
+		// less shininess
+		sphere->m_material->setShininess(100);
+
+		sphere->setUseDisplayList(true);
+		return sphere;
+	}
+
+	void SaiGraphics::updateGoalSphere(chai3d::cShapeSphere *sphere, const Eigen::Vector3d &position)
+	{
+		sphere->setLocalPos(position(0), position(1), position(2));
 	}
 
 	void SaiGraphics::setBackgroundImage(const std::string &image_path)
