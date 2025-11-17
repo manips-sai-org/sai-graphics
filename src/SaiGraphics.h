@@ -376,13 +376,15 @@ namespace SaiGraphics
 		void updateLineSegment(chai3d::cMultiSegment *multi_segment,
 							   const Eigen::Vector3d &point_start,
 							   const Eigen::Vector3d &point_end,
-							   chai3d::cColorf color, float line_width);
+							   chai3d::cColorf color, float line_width, bool setShowEnable);
 
 		chai3d::cShapeSphere *createGoalSphere(const Eigen::Vector3d &position,
 											   const double radius,
 											   chai3d::cColorf color);
 
-		void updateGoalSphere(chai3d::cShapeSphere *sphere, const Eigen::Vector3d &position);
+		void updateGoalSphere(chai3d::cShapeSphere *sphere, const Eigen::Vector3d &position, bool setShowEnable);
+
+		void setCameraClippingPlanes(const double near_plane, const double far_plane, const std::string &camera_name);
 
 		bool is_pressed(int key) const;
 
