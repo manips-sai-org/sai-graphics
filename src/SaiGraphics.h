@@ -39,6 +39,20 @@ namespace SaiGraphics
 			  pose_in_link(pose_in_link) {}
 	};
 
+	struct LightLinkAttachment
+	{
+		std::string model_name;
+		std::string link_name; // empty if object
+		Eigen::Affine3d pose_in_link;
+
+		LightLinkAttachment(const std::string &model_name,
+							const std::string &link_name,
+							const Eigen::Affine3d &pose_in_link)
+			: model_name(model_name),
+			  link_name(link_name),
+			  pose_in_link(pose_in_link) {}
+	};
+
 	/**
 	 * @brief Class that represents a visual model of the virtual world.
 	 *
@@ -220,6 +234,24 @@ namespace SaiGraphics
 						  const std::string &link_name = "");
 
 		/**
+		 * @brief Recursive function to apply collision mesh visibility to all
+		 * child links of a parent link.
+		 * @param parent Parent link to start recursion from.
+		 * @param show Flag whether to show collision
+		 */
+		void applyCollisionVisibilityRecursive(chai3d::cRobotLink *parent, bool show);
+
+		/**
+		 * @brief Render collision mesh for a particular link or all links on a robot.
+		 * @param show_collisionmesh Flag whether should show collision mesh or not.
+		 * @param robot_name Robot name.
+		 * @param robot_name Link name. If left blank, all link frames are shown.
+		 */
+		void showCollisionMesh(bool show_collisionmesh,
+							   const std::string &robot_or_object_name,
+							   const std::string &link_name = "");
+
+		/**
 		 * @brief Set the Background color of the world
 		 *
 		 * @param red red component of the color between 0 and 1
@@ -232,7 +264,7 @@ namespace SaiGraphics
 			_world->setBackgroundColor(red, green, blue);
 		}
 
-		void setBackgroundImage(const std::string &image_path, const std::string &camera_name);
+		void setBackgroundImage(const std::string &image_path, const std::string &camera_name = "default_camera");
 
 		/// @brief Returns the current camera name.
 		std::string getCurrentCameraName() const
@@ -294,6 +326,20 @@ namespace SaiGraphics
 
 		/// @brief Detach a camera from a robot or object.
 		void detachCameraFromRobotOrObject(const std::string &camera_name);
+
+		/**
+		 * @brief Attach a spot light to a robot link such that the light moves
+		 * automatically with said link. The pose of the light cannot be set via
+		 * the setLightPose function when it is attached to a robot link.
+		 *
+		 * @param light_name name of the light to attach
+		 * @param robot_name name of the robot to attach the light to
+		 * @param link_name name of the link to attach the light to
+		 * @param pose_in_link pose of the light in the link frame
+		 */
+		void attachSpotLightToRobotLink(
+			const std::string &light_name, const std::string &robot_name,
+			const std::string &link_name, const Eigen::Affine3d &pose_in_link);
 
 		/**
 		 * @brief adds a force sensor display to the graphics world. The force
@@ -362,6 +408,9 @@ namespace SaiGraphics
 		/// object, false otherwise
 		bool staticObjectExistsInWorld(const std::string &object_name) const;
 
+		void setScaleStaticObject(const std::string &object_name,
+								  const double scale_factor);
+
 		/// @brief returns true if the camera exists in the world, false otherwise
 		bool cameraExistsInWorld(const std::string &camera_name) const;
 
@@ -371,7 +420,7 @@ namespace SaiGraphics
 
 		chai3d::cMultiSegment *createLineSegment(const Eigen::Vector3d &point_start,
 												 const Eigen::Vector3d &point_end,
-												 chai3d::cColorf color, float line_width);
+												 chai3d::cColorf color, float line_width, bool setShowEnable = true);
 
 		void updateLineSegment(chai3d::cMultiSegment *multi_segment,
 							   const Eigen::Vector3d &point_start,
@@ -380,11 +429,20 @@ namespace SaiGraphics
 
 		chai3d::cShapeSphere *createGoalSphere(const Eigen::Vector3d &position,
 											   const double radius,
-											   chai3d::cColorf color);
+											   chai3d::cColorf color, bool setShowEnable = true);
 
-		void updateGoalSphere(chai3d::cShapeSphere *sphere, const Eigen::Vector3d &position, bool setShowEnable);
+		void updateGoalSphere(chai3d::cShapeSphere *sphere, const Eigen::Vector3d &position, bool setShowEnable = true, bool setShowFrame = false, const Eigen::Matrix3d &orientation = Eigen::Matrix3d::Identity());
 
-		void setCameraClippingPlanes(const double near_plane, const double far_plane, const std::string &camera_name);
+		chai3d::cMesh *createEllipsoid(const Vector3d &scaleVector, const Vector3d &u, const Vector3d &v, const Vector3d &w, const Vector3d &position, chai3d::cColorf &color);
+
+		chai3d::cMultiMesh *createMultiMesh(const std::string &mesh_file_path,
+											const std::string &object_name,
+											const Eigen::Affine3d &object_pose,
+											const double size_factor = 1.0);
+
+		void setCameraClippingPlanes(const double near_plane, const double far_plane, const std::string &camera_name = "default_camera");
+
+		void setStereoMode(const bool stereo_enabled, const std::string &camera_name);
 
 		bool is_pressed(int key) const;
 
@@ -392,7 +450,18 @@ namespace SaiGraphics
 
 		GLFWwindow *getWindow() { return _window; }
 
+		chai3d::cWorld *getWorld() { return _world; }
+
+		void toggleFullscreen();
+
+		void createSidePanel(std::string main_camera_name, std::string side_camera_name);
+
+		chai3d::cGenericLight *getLight(const std::string &light_name);
+
 	private:
+		bool _fullscreen = false;
+		int _windowPosX, _windowPosY, _windowWidth, _windowHeight;
+
 		/**
 		 * @brief Initialize the world with the given world file
 		 *
@@ -541,6 +610,11 @@ namespace SaiGraphics
 		/// @brief maps from camera names to camera link attachments cameras attached to an object or robot
 		std::map<std::string, std::shared_ptr<CameraLinkAttachment>>
 			_camera_link_attachments;
+		/// @brief maps from light names to light link attachments lights attached to an object or robot
+		std::map<std::string, std::shared_ptr<LightLinkAttachment>>
+			_light_link_attachments;
+		/// @brief maps from main camera names to side panel frame buffers
+		std::map<std::string, std::vector<chai3d::cFrameBufferPtr>> _active_side_panels;
 
 		/// @brief last cursor x position
 		double _last_cursorx;

@@ -672,9 +672,10 @@ namespace Parser
 			parent_link = dynamic_cast<cRobotLink *>(getGenericObjectChildRecursive(
 				urdf_parent->name, base)); // returns NULL if link does not exist
 
-			// cout << "joint: " << urdf_joint->name << "\tparent = " <<
-			// urdf_parent->name << " child = " << urdf_child->name << " parent_id =
-			// " << rbdl_parent_id << endl;
+			// cout << "\njoint: " << urdf_joint->name << endl;
+			// cout << "parent = " << urdf_parent->name << endl;
+			// cout << "child = " << urdf_child->name << endl;
+			// cout << " parent_id = " << rbdl_parent_id << endl;
 
 			// create a new link
 			cRobotLink *link = new cRobotLink();
@@ -684,6 +685,104 @@ namespace Parser
 			for (const auto visual_ptr : urdf_child->visual_array)
 			{
 				loadVisualtoGenericObject(link, visual_ptr, working_dirname);
+			}
+
+			for (const auto collision_ptr : urdf_child->collision_array)
+			{
+				auto tmp_mmesh = new cMultiMesh();
+				tmp_mmesh->m_name = std::string("collision_mesh_") + collision_ptr->name;
+				auto tmp_mesh = new cMesh();
+				const auto geom_type = collision_ptr->geometry->type;
+				if (geom_type == SaiUrdfreader::Geometry::MESH)
+				{
+					const auto mesh_ptr = dynamic_cast<const SaiUrdfreader::Mesh *>(
+						collision_ptr->geometry.get());
+					assert(mesh_ptr);
+
+					// Handle file paths
+					bool file_load_success = false;
+					std::string processed_filepath = working_dirname + "/" + mesh_ptr->filename;
+
+					// Handle path prefixes if your specific SaiModel logic requires it
+					if (SaiModel::ReplaceUrdfPathPrefix(mesh_ptr->filename) != mesh_ptr->filename)
+					{
+						processed_filepath = SaiModel::ReplaceUrdfPathPrefix(mesh_ptr->filename);
+					}
+
+					// Check file extension
+					if (processed_filepath.length() < 5)
+					{
+						cerr << "Error: File extension too short: " << processed_filepath << endl;
+						abort();
+					}
+
+					std::string extension = processed_filepath.substr(processed_filepath.length() - 4);
+					std::transform(extension.begin(), extension.end(), extension.begin(),
+								   [](unsigned char c)
+								   { return std::tolower(c); });
+
+					// Load based on extension
+					if (extension == ".stl")
+					{
+						file_load_success = cLoadFileSTL(tmp_mmesh, processed_filepath);
+					}
+					else if (extension == ".obj")
+					{
+						file_load_success = cLoadFileOBJ(tmp_mmesh, processed_filepath);
+					}
+					else if (extension == ".3ds")
+					{
+						file_load_success = cLoadFile3DS(tmp_mmesh, processed_filepath);
+					}
+
+					if (!file_load_success)
+					{
+						cerr << "Couldn't load collision mesh file: " << processed_filepath << endl;
+						abort();
+					}
+
+					tmp_mmesh->scaleXYZ(mesh_ptr->scale.x, mesh_ptr->scale.y, mesh_ptr->scale.z);
+				}
+				else if (geom_type == SaiUrdfreader::Geometry::BOX)
+				{
+					const auto box_ptr = dynamic_cast<const SaiUrdfreader::Box *>(
+						collision_ptr->geometry.get());
+					assert(box_ptr);
+					chai3d::cCreateBox(tmp_mesh, box_ptr->dim.x, box_ptr->dim.y, box_ptr->dim.z);
+					tmp_mmesh->addMesh(tmp_mesh);
+				}
+				else if (geom_type == SaiUrdfreader::Geometry::SPHERE)
+				{
+					const auto sphere_ptr = dynamic_cast<const SaiUrdfreader::Sphere *>(
+						collision_ptr->geometry.get());
+					assert(sphere_ptr);
+					chai3d::cCreateSphere(tmp_mesh, sphere_ptr->radius);
+					tmp_mmesh->addMesh(tmp_mesh);
+				}
+				else if (geom_type == SaiUrdfreader::Geometry::CYLINDER)
+				{
+					const auto cylinder_ptr = dynamic_cast<const SaiUrdfreader::Cylinder *>(
+						collision_ptr->geometry.get());
+					assert(cylinder_ptr);
+					// Create cylinder with offset to match URDF center convention
+					chai3d::cCreateCylinder(tmp_mesh, cylinder_ptr->length,
+											cylinder_ptr->radius, 32, 1, 1, true, true,
+											cVector3d(0, 0, -cylinder_ptr->length / 2));
+					tmp_mmesh->addMesh(tmp_mesh);
+				}
+				auto urdf_q = collision_ptr->origin.rotation;
+				Quaternion<double> tmp_q(urdf_q.w, urdf_q.x, urdf_q.y, urdf_q.z);
+				Matrix3d mesh_rotation = tmp_q.toRotationMatrix();
+				Eigen::Vector3d mesh_position(collision_ptr->origin.position.x,
+											  collision_ptr->origin.position.y,
+											  collision_ptr->origin.position.z);
+
+				tmp_mmesh->setLocalPos(cVector3d(mesh_position));
+				tmp_mmesh->setLocalRot(cMatrix3d(mesh_rotation));
+				tmp_mmesh->setShowEnabled(false);
+				// set the name to be able to make it visible later
+				tmp_mmesh->m_name = collision_ptr->name;
+				link->addChild(tmp_mmesh);
 			}
 
 			// compute the joint transformation which acts as the child link

@@ -32,6 +32,8 @@ namespace
 #define NEXT_CAMERA_KEY GLFW_KEY_N
 #define PREV_CAMERA_KEY GLFW_KEY_B
 #define SHOW_CAMERA_POS_KEY GLFW_KEY_S
+#define TOGGLE_FULLSCREEN_KEY GLFW_KEY_F
+#define SWITCH_MAIN_SIDE_CAMERA_KEY GLFW_KEY_P
 
 	// map to store key presses. The first bool is true if the key is pressed and
 	// false otherwise, the second bool is used as a flag to know if the initial key
@@ -47,6 +49,8 @@ namespace
 		{NEXT_CAMERA_KEY, std::make_pair(false, true)},
 		{PREV_CAMERA_KEY, std::make_pair(false, true)},
 		{SHOW_CAMERA_POS_KEY, std::make_pair(false, true)},
+		{TOGGLE_FULLSCREEN_KEY, std::make_pair(false, true)},
+		{SWITCH_MAIN_SIDE_CAMERA_KEY, std::make_pair(false, true)},
 		{GLFW_KEY_LEFT_SHIFT, std::make_pair(false, true)},
 		{GLFW_KEY_LEFT_ALT, std::make_pair(false, true)},
 		{GLFW_KEY_LEFT_CONTROL, std::make_pair(false, true)},
@@ -57,7 +61,6 @@ namespace
 		{GLFW_KEY_K, {false, true}},
 		{GLFW_KEY_C, {false, true}},
 		{GLFW_KEY_M, {false, true}},
-		{GLFW_KEY_F, {false, true}},
 	};
 
 	std::unordered_map<int, std::pair<bool, bool>> mouse_button_presses_map = {
@@ -309,6 +312,7 @@ namespace SaiGraphics
 		_force_sensor_displays.clear();
 		_ui_force_widgets.clear();
 		_camera_link_attachments.clear();
+		_light_link_attachments.clear();
 	}
 
 	void SaiGraphics::initializeWindow(const std::string &window_name)
@@ -449,6 +453,37 @@ namespace SaiGraphics
 		_camera_link_attachments.erase(camera_name);
 	}
 
+	void SaiGraphics::attachSpotLightToRobotLink(
+		const std::string &light_name, const std::string &robot_name,
+		const std::string &link_name, const Eigen::Affine3d &pose_in_link)
+	{
+
+		chai3d::cGenericLight *light = getLight(light_name);
+		if (light == nullptr)
+		{
+			cout << "WARNING: light [" << light_name
+				 << "] not found in graphics world, cannot attach to robot link"
+				 << endl;
+			return;
+		}
+		if (!robotExistsInWorld(robot_name, link_name))
+		{
+			cout << "WARNING: robot [" << robot_name << "] link [" << link_name
+				 << "] not found in graphics world, cannot attach a light to it"
+				 << endl;
+			return;
+		}
+		if (_light_link_attachments.find(light_name) !=
+			_light_link_attachments.end())
+		{
+			cout << "light [" << light_name
+				 << "] already attached to a robot or object. detach first" << endl;
+			return;
+		}
+		_light_link_attachments[light_name] =
+			std::make_shared<LightLinkAttachment>(robot_name, link_name, pose_in_link);
+	}
+
 	void SaiGraphics::addForceSensorDisplay(
 		const SaiModel::ForceSensorData &sensor_data)
 	{
@@ -554,6 +589,25 @@ namespace SaiGraphics
 			return false;
 		}
 		return true;
+	}
+
+	void SaiGraphics::setScaleStaticObject(
+		const std::string &object_name, const double scale)
+	{
+		if (!staticObjectExistsInWorld(object_name))
+		{
+			throw std::invalid_argument(
+				"static object " + object_name +
+				" does not exist in graphics world. Cannot set scale.");
+		}
+		for (unsigned int i = 0; i < _world->getNumChildren(); ++i)
+		{
+			if (_world->getChild(i)->m_name == object_name)
+			{
+				_world->getChild(i)->scale(scale);
+				return;
+			}
+		}
 	}
 
 	bool SaiGraphics::cameraExistsInWorld(const std::string &camera_name) const
@@ -691,6 +745,31 @@ namespace SaiGraphics
 
 	void SaiGraphics::renderGraphicsWorld()
 	{
+		// toggles fullscreen if needed
+		if (consume_first_press(TOGGLE_FULLSCREEN_KEY))
+		{
+			_fullscreen = !_fullscreen;
+
+			GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+			const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+
+			if (_fullscreen)
+			{
+				// Get current window pos/size to restore later if needed
+				// or use hardcoded 50% logic from glfwInitialize
+				glfwSetWindowMonitor(_window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+			}
+			else
+			{
+				// Restore to a centered window (using the logic from your glfwInitialize function)
+				int windowW = 0.5 * mode->width;
+				int windowH = 0.5 * mode->height;
+				int windowPosX = (mode->width - windowW) / 2;
+				int windowPosY = (mode->height - windowH) / 2;
+				glfwSetWindowMonitor(_window, NULL, windowPosX, windowPosY, windowW, windowH, 0);
+			}
+			glfwSwapInterval(1);
+		}
 
 		// swap camera if needed
 		if (consume_first_press(NEXT_CAMERA_KEY))
@@ -704,6 +783,60 @@ namespace SaiGraphics
 			_current_camera_index =
 				(_current_camera_index - 1) % _camera_names.size();
 		}
+
+		if (consume_first_press(SWITCH_MAIN_SIDE_CAMERA_KEY))
+		{
+			string current_cam = _camera_names[_current_camera_index];
+			string target_cam = "";
+
+			auto it = _active_side_panels.find(current_cam);
+			if (it != _active_side_panels.end() && !it->second.empty())
+			{
+				auto side_fb = it->second.front();
+				for (auto const &[name, fb] : _camera_frame_buffers)
+				{
+					if (fb == side_fb)
+					{
+						target_cam = name;
+						break;
+					}
+				}
+
+				if (!target_cam.empty() && _active_side_panels.find(target_cam) == _active_side_panels.end())
+				{
+					createSidePanel(target_cam, current_cam);
+				}
+			}
+			else
+			{
+				for (auto const &[main_name, panels] : _active_side_panels)
+				{
+					for (auto const &fb : panels)
+					{
+						if (_camera_frame_buffers[current_cam] == fb)
+						{
+							target_cam = main_name;
+							break;
+						}
+					}
+					if (!target_cam.empty())
+						break;
+				}
+			}
+
+			if (!target_cam.empty())
+			{
+				for (int i = 0; i < _camera_names.size(); ++i)
+				{
+					if (_camera_names[i] == target_cam)
+					{
+						_current_camera_index = i;
+						break;
+					}
+				}
+			}
+		}
+
 		const std::string camera_name = _camera_names[_current_camera_index];
 
 		// update graphics. this automatically waits for the correct amount of time
@@ -918,6 +1051,77 @@ namespace SaiGraphics
 
 		// update shadow maps
 		_world->updateShadowMaps();
+
+		for (const auto &item : _camera_link_attachments)
+		{
+			string cam_name = item.first;
+			auto attachment = item.second;
+			Affine3d camera_pose;
+
+			if (attachment->link_name.empty())
+			{
+				camera_pose = getObjectPose(attachment->model_name) * attachment->pose_in_link;
+			}
+			else
+			{
+				if (_robot_models.find(attachment->model_name) != _robot_models.end())
+				{
+					camera_pose = _robot_models.at(attachment->model_name)->transformInWorld(attachment->link_name, attachment->pose_in_link.translation(), attachment->pose_in_link.rotation());
+				}
+			}
+			setCameraPose(cam_name, camera_pose);
+		}
+
+		// update the lights position if attached to robot link
+		for (const auto &item : _light_link_attachments)
+		{
+			string light_name = item.first;
+			auto attachment = item.second;
+			Affine3d light_pose;
+
+			if (_robot_models.find(attachment->model_name) != _robot_models.end())
+			{
+				light_pose = _robot_models.at(attachment->model_name)->transformInWorld(attachment->link_name, attachment->pose_in_link.translation(), attachment->pose_in_link.rotation());
+				auto light = getLight(light_name);
+				light->setLocalPos(cVector3d(light_pose.translation()));
+				light->setLocalRot(cMatrix3d(light_pose.rotation()));
+			}
+		}
+
+		auto it = _active_side_panels.find(camera_name);
+		if (it != _active_side_panels.end())
+		{
+			const double SIZE_RATIO = 0.30;
+			const int margin = 30;
+			const int borderWidth = 3;
+
+			int pWidth = static_cast<int>(_window_width * SIZE_RATIO);
+			int pHeight = static_cast<int>(_window_height * SIZE_RATIO);
+
+			for (auto &fb : it->second)
+			{
+				fb->setSize(pWidth - (2 * borderWidth), pHeight - (2 * borderWidth));
+				fb->renderView();
+
+				auto main_cam = getCamera(camera_name);
+				for (int i = 0; i < main_cam->m_frontLayer->getNumChildren(); ++i)
+				{
+					auto borderPanel = dynamic_cast<chai3d::cPanel *>(main_cam->m_frontLayer->getChild(i));
+					if (borderPanel && borderPanel->getNumChildren() > 0)
+					{
+						auto viewPanel = dynamic_cast<chai3d::cViewPanel *>(borderPanel->getChild(0));
+						if (viewPanel && viewPanel->getFrameBuffer() == fb)
+						{
+							borderPanel->setSize(pWidth, pHeight);
+							borderPanel->setLocalPos(_window_width - pWidth - margin, _window_height - pHeight - margin);
+
+							viewPanel->setSize(pWidth - (2 * borderWidth), pHeight - (2 * borderWidth));
+							viewPanel->setLocalPos(borderWidth, borderWidth);
+						}
+					}
+				}
+			}
+		}
 
 		render(camera_name);
 	}
@@ -1351,6 +1555,89 @@ namespace SaiGraphics
 		}
 	}
 
+	void SaiGraphics::applyCollisionVisibilityRecursive(chai3d::cRobotLink *parent, bool show)
+	{
+		for (unsigned int i = 0; i < parent->getNumChildren(); ++i)
+		{
+			cGenericObject *child = parent->getChild(i);
+
+			if (child->m_name == parent->m_name + "_collision")
+			{
+				child->setShowEnabled(show, false);
+			}
+
+			cRobotLink *child_link = dynamic_cast<cRobotLink *>(child);
+			if (child_link != NULL)
+			{
+				applyCollisionVisibilityRecursive(child_link, show);
+			}
+		}
+	}
+
+	void SaiGraphics::showCollisionMesh(bool show_collisionmesh,
+										const std::string &robot_or_object_name,
+										const std::string &link_name)
+	{
+		// Case: Apply to all links
+		if (link_name.empty())
+		{
+			// Finds the robot base
+			cGenericObject *base = NULL;
+			for (unsigned int i = 0; i < _world->getNumChildren(); ++i)
+			{
+				if (robot_or_object_name == _world->getChild(i)->m_name)
+				{
+					base = _world->getChild(i);
+					break;
+				}
+			}
+
+			if (base == NULL)
+			{
+				cerr << "Could not find robot or object in chai graphics world: "
+					 << robot_or_object_name << ". Cannot show collision mesh."
+					 << endl;
+				return;
+			}
+
+			// Iteration over all the base's children
+			for (unsigned int i = 0; i < base->getNumChildren(); ++i)
+			{
+				cRobotLink *root_link = dynamic_cast<cRobotLink *>(base->getChild(i));
+
+				if (root_link != NULL)
+				{
+					applyCollisionVisibilityRecursive(root_link, show_collisionmesh);
+				}
+			}
+		}
+
+		// Case: Apply to a specific link
+		else
+		{
+			auto target_link = findLink(robot_or_object_name, link_name);
+			if (target_link == NULL)
+			{
+				cerr << "Could not find link " << link_name
+					 << " in robot " << robot_or_object_name
+					 << ". Cannot show collision mesh." << endl;
+				return;
+			}
+
+			// Find the collision mesh child of this specific link
+			cGenericObject *child;
+			for (unsigned int i = 0; i < target_link->getNumChildren(); ++i)
+			{
+				child = target_link->getChild(i);
+				if (child->m_name == link_name + "_collision")
+				{
+					child->setShowEnabled(show_collisionmesh, false);
+					break;
+				}
+			}
+		}
+	}
+
 	void SaiGraphics::setRenderingEnabled(const bool rendering_enabled,
 										  const string robot_or_object_name,
 										  const string link_name)
@@ -1461,10 +1748,11 @@ namespace SaiGraphics
 
 	chai3d::cMultiSegment *SaiGraphics::createLineSegment(const Eigen::Vector3d &point_start,
 														  const Eigen::Vector3d &point_end,
-														  chai3d::cColorf color, float line_width)
+														  chai3d::cColorf color, float line_width, bool setShowEnable)
 	{
 		// create a new chai3d multi-segment
 		auto *multi_segment = new chai3d::cMultiSegment();
+
 		// add the multi-segment to the world
 		_world->addChild(multi_segment);
 
@@ -1486,6 +1774,9 @@ namespace SaiGraphics
 
 		// use display list to optimize graphic rendering performance
 		multi_segment->setUseDisplayList(true);
+
+		multi_segment->setShowEnabled(setShowEnable);
+
 		return multi_segment;
 	}
 
@@ -1518,7 +1809,7 @@ namespace SaiGraphics
 
 	chai3d::cShapeSphere *SaiGraphics::createGoalSphere(const Eigen::Vector3d &position,
 														const double radius,
-														chai3d::cColorf color)
+														chai3d::cColorf color, bool setShowEnable)
 	{
 		auto *sphere = new chai3d::cShapeSphere(radius);
 		_world->addChild(sphere);
@@ -1530,36 +1821,140 @@ namespace SaiGraphics
 		sphere->m_material->setShininess(100);
 
 		sphere->setUseDisplayList(true);
+		sphere->setShowEnabled(setShowEnable);
 		return sphere;
 	}
 
-	void SaiGraphics::updateGoalSphere(chai3d::cShapeSphere *sphere, const Eigen::Vector3d &position, bool setShowEnable)
+	void SaiGraphics::updateGoalSphere(chai3d::cShapeSphere *sphere, const Eigen::Vector3d &position, bool setShowEnable, bool setShowFrame, const Eigen::Matrix3d &orientation)
 	{
 		sphere->setShowEnabled(setShowEnable);
+		sphere->setShowFrame(setShowFrame);
 		sphere->setLocalPos(position(0), position(1), position(2));
+		sphere->setLocalRot(cMatrix3d(orientation));
+	}
+
+	chai3d::cMesh *SaiGraphics::createEllipsoid(const Vector3d &scaleVector, const Vector3d &u, const Vector3d &v, const Vector3d &w, const Vector3d &position, cColorf &color)
+	{
+		// create a new mesh first:
+		auto ellipsoid = new chai3d::cMesh();
+		chai3d::cCreateEllipsoid(ellipsoid, scaleVector(0), scaleVector(1), scaleVector(2));
+		ellipsoid->setUseTransparency(true);
+		ellipsoid->m_material->setColor(color);
+		ellipsoid->setLocalPos(position(0), position(1), position(2));
+		// use u v w to create rotation matrix
+		Matrix3d rot;
+		rot.col(0) = u;
+		rot.col(1) = v;
+		rot.col(2) = w;
+		ellipsoid->setLocalRot(cMatrix3d(rot));
+		_world->addChild(ellipsoid);
+		return ellipsoid;
 	}
 
 	void SaiGraphics::setBackgroundImage(const std::string &image_path, const std::string &camera_name)
 	{
-		chai3d::cCamera *camera = getCamera(camera_name);
-		chai3d::cBackground *background = new cBackground();
-		camera->m_backLayer->addChild(background);
+		auto applyToCamera = [&](const std::string &name)
+		{
+			chai3d::cCamera *camera = getCamera(name);
+			if (camera)
+			{
+				chai3d::cBackground *background = new chai3d::cBackground();
+				camera->m_backLayer->addChild(background);
 
-		// load a texture file
-		bool fileload;
-		fileload = background->loadFromFile(image_path);
+				if (!background->loadFromFile(image_path))
+				{
+					std::cout << "Error - Image failed to load correctly for camera: " << name << std::endl;
+				}
+			}
+			else
+			{
+				std::cerr << "Warning: Camera '" << name << "' not found." << std::endl;
+			}
+		};
+
+		if (camera_name == "default_camera")
+		{
+			for (const std::string &name : _camera_names)
+			{
+				applyToCamera(name);
+			}
+		}
+		else
+		{
+			applyToCamera(camera_name);
+		}
+	}
+
+	chai3d::cMultiMesh *SaiGraphics::createMultiMesh(const std::string &mesh_file_path,
+													 const std::string &object_name,
+													 const Eigen::Affine3d &object_pose,
+													 const double size_factor)
+	{
+		// create a new multi-mesh
+		auto multi_mesh = new chai3d::cMultiMesh();
+		multi_mesh->m_name = object_name;
+		_world->addChild(multi_mesh);
+		// load the mesh file
+		bool fileload = multi_mesh->loadFromFile(mesh_file_path);
 		if (!fileload)
 		{
-			cout << "Error - Image failed to load correctly." << endl;
+			cout << "Error - Mesh file failed to load correctly." << endl;
 		}
+		// set the pose
+		multi_mesh->setLocalPos(object_pose.translation());
+		multi_mesh->setLocalRot(cMatrix3d(object_pose.rotation()));
+		// apply uniform scale (size factor)
+		multi_mesh->scale(size_factor);
+		return multi_mesh;
 	}
 
 	void SaiGraphics::setCameraClippingPlanes(const double near_plane,
 											  const double far_plane,
 											  const std::string &camera_name)
 	{
+		if (camera_name == "default_camera")
+		{
+			// Iterate through the vector of all camera names in the world
+			for (const std::string &name : _camera_names)
+			{
+				chai3d::cCamera *camera = getCamera(name);
+				if (camera)
+				{
+					camera->setClippingPlanes(near_plane, far_plane);
+				}
+			}
+		}
+		else
+		{
+			// Apply only to the specific camera requested
+			chai3d::cCamera *camera = getCamera(camera_name);
+			if (camera)
+			{
+				camera->setClippingPlanes(near_plane, far_plane);
+			}
+			else
+			{
+				std::cerr << "Warning: Camera '" << camera_name << "' not found." << std::endl;
+			}
+		}
+	}
+
+	void SaiGraphics::setStereoMode(const bool stereo_enabled,
+									const std::string &camera_name)
+	{
 		chai3d::cCamera *camera = getCamera(camera_name);
-		camera->setClippingPlanes(near_plane, far_plane);
+		if (stereo_enabled)
+		{
+			camera->setStereoMode(C_STEREO_PASSIVE_LEFT_RIGHT);
+			camera->setStereoEyeSeparation(.02);
+			camera->setStereoFocalLength(10.0);
+
+			// chai3d::glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
+		}
+		else
+		{
+			camera->setStereoMode(C_STEREO_DISABLED);
+		}
 	}
 
 	bool SaiGraphics::is_pressed(int key) const
@@ -1583,6 +1978,49 @@ namespace SaiGraphics
 			return true;
 		}
 		return false;
+	}
+
+	void SaiGraphics::createSidePanel(string main_camera_name, string side_camera_name)
+	{
+		auto side_camera = getCamera(side_camera_name);
+		if (!side_camera)
+			return;
+
+		if (_camera_frame_buffers.find(side_camera_name) == _camera_frame_buffers.end())
+		{
+			_camera_frame_buffers[side_camera_name] = chai3d::cFrameBuffer::create();
+		}
+		auto frameBuffer = _camera_frame_buffers[side_camera_name];
+		frameBuffer->setup(side_camera);
+
+		auto borderPanel = new chai3d::cPanel();
+		borderPanel->setColor(chai3d::cColorf(0.8f, 0.8f, 0.8f, 1.0f));
+		borderPanel->setCornerRadius(20, 20, 20, 20);
+		borderPanel->setTransparencyLevel(0.5f);
+
+		auto sideViewPanel = new chai3d::cViewPanel(frameBuffer);
+		sideViewPanel->setCornerRadius(18, 18, 18, 18);
+
+		borderPanel->addChild(sideViewPanel);
+
+		auto main_camera = getCamera(main_camera_name);
+		main_camera->m_frontLayer->addChild(borderPanel);
+
+		_active_side_panels[main_camera_name].push_back(frameBuffer);
+	}
+
+	// create a get function for a light from the world
+	chai3d::cGenericLight *SaiGraphics::getLight(const std::string &light_name)
+	{
+		for (unsigned int i = 0; i < _world->m_lights.size(); ++i)
+		{
+			auto light = _world->m_lights[i];
+			if (light != nullptr && light->m_name == light_name)
+			{
+				return light;
+			}
+		}
+		return nullptr;
 	}
 
 } // namespace SaiGraphics
