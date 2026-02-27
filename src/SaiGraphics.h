@@ -138,6 +138,8 @@ namespace SaiGraphics
 		 */
 		Eigen::VectorXd getUITorques(const std::string &robot_name);
 
+		Eigen::Vector6d getUIForceMoment(const std::string &robot_or_object_name);
+
 		/**
 		 * @brief Enable interacting with a specific robot by right clicking on the
 		 * display window
@@ -425,7 +427,7 @@ namespace SaiGraphics
 		void updateLineSegment(chai3d::cMultiSegment *multi_segment,
 							   const Eigen::Vector3d &point_start,
 							   const Eigen::Vector3d &point_end,
-							   chai3d::cColorf color, float line_width, bool setShowEnable);
+							   chai3d::cColorf color, float line_width, bool setShowEnable = true);
 
 		chai3d::cShapeSphere *createGoalSphere(const Eigen::Vector3d &position,
 											   const double radius,
@@ -457,6 +459,9 @@ namespace SaiGraphics
 		void createSidePanel(std::string main_camera_name, std::string side_camera_name);
 
 		chai3d::cGenericLight *getLight(const std::string &light_name);
+
+		std::vector<unsigned char> getFrameBuffer(const std::string &camera_name,
+												  int width, int height);
 
 	private:
 		bool _fullscreen = false;
@@ -519,7 +524,6 @@ namespace SaiGraphics
 								   const Eigen::Vector3d &position,
 								   const Eigen::Vector3d &vertical,
 								   const Eigen::Vector3d &lookat);
-
 		/* CHAI specific interface */
 		/**
 		 * @brief Get pointer to Chai camera object.
@@ -615,6 +619,8 @@ namespace SaiGraphics
 			_light_link_attachments;
 		/// @brief maps from main camera names to side panel frame buffers
 		std::map<std::string, std::vector<chai3d::cFrameBufferPtr>> _active_side_panels;
+		/// @brief maps from camera names to background frame buffers
+		std::map<std::string, chai3d::cFrameBufferPtr> _camera_fbo_map;
 
 		/// @brief last cursor x position
 		double _last_cursorx;

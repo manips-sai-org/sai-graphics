@@ -34,6 +34,7 @@ namespace
 #define SHOW_CAMERA_POS_KEY GLFW_KEY_S
 #define TOGGLE_FULLSCREEN_KEY GLFW_KEY_F
 #define SWITCH_MAIN_SIDE_CAMERA_KEY GLFW_KEY_P
+#define TRACKING_CAM_COMMAND_KEY GLFW_KEY_T
 
 	// map to store key presses. The first bool is true if the key is pressed and
 	// false otherwise, the second bool is used as a flag to know if the initial key
@@ -51,6 +52,7 @@ namespace
 		{SHOW_CAMERA_POS_KEY, std::make_pair(false, true)},
 		{TOGGLE_FULLSCREEN_KEY, std::make_pair(false, true)},
 		{SWITCH_MAIN_SIDE_CAMERA_KEY, std::make_pair(false, true)},
+		{TRACKING_CAM_COMMAND_KEY, std::make_pair(false, true)},
 		{GLFW_KEY_LEFT_SHIFT, std::make_pair(false, true)},
 		{GLFW_KEY_LEFT_ALT, std::make_pair(false, true)},
 		{GLFW_KEY_LEFT_CONTROL, std::make_pair(false, true)},
@@ -266,6 +268,7 @@ namespace SaiGraphics
 		{
 			_camera_names.push_back(it.first);
 		}
+
 		for (auto robot_filename : _robot_filenames)
 		{
 			// get robot base object in chai world
@@ -335,13 +338,13 @@ namespace SaiGraphics
 				 << endl;
 			return;
 		}
-		if (_camera_link_attachments.find(camera_name) ==
-			_camera_link_attachments.end())
-		{
-			cout << "WARNING: Cannot set pose for camera [" << camera_name
-				 << "] attached to a robot or object" << endl;
-			return;
-		}
+		// if (_camera_link_attachments.find(camera_name) !=
+		// 	_camera_link_attachments.end())
+		// {
+		// 	cout << "WARNING: Cannot set pose for camera [" << camera_name
+		// 		 << "] attached to a robot or object" << endl;
+		// 	return;
+		// }
 		Vector3d pos = camera_pose.translation();
 		Vector3d up = -camera_pose.rotation().col(1);
 		Vector3d lookat = pos + camera_pose.linear().col(2);
@@ -696,6 +699,26 @@ namespace SaiGraphics
 						: Eigen::VectorXd::Zero(6);
 	}
 
+	Eigen::Vector6d SaiGraphics::getUIForceMoment(const std::string &robot_or_object_name)
+	{
+		bool is_robot = robotExistsInWorld(robot_or_object_name);
+		bool is_object = dynamicObjectExistsInWorld(robot_or_object_name);
+		if (!is_robot && !is_object)
+		{
+			throw std::invalid_argument(
+				"robot or dynamic object not found in "
+				"SaiGraphics::getUIForceMoment");
+		}
+		for (auto widget : _ui_force_widgets)
+		{
+			if (robot_or_object_name == widget->getRobotOrObjectName())
+			{
+				return widget->getAppliedForceMoment();
+			}
+		}
+		return Eigen::Vector6d::Zero();
+	}
+
 	const std::vector<std::string> SaiGraphics::getRobotNames() const
 	{
 		std::vector<std::string> robot_names;
@@ -774,12 +797,13 @@ namespace SaiGraphics
 		// swap camera if needed
 		if (consume_first_press(NEXT_CAMERA_KEY))
 		{
-			cout << "Switching to next camera" << endl;
+			cout << "Switching to camera " << _camera_names[(_current_camera_index + 1) % _camera_names.size()] << endl;
 			_current_camera_index =
 				(_current_camera_index + 1) % _camera_names.size();
 		}
 		if (consume_first_press(PREV_CAMERA_KEY))
 		{
+			cout << "Switching to camera " << _camera_names[(_current_camera_index - 1 + _camera_names.size()) % _camera_names.size()] << endl;
 			_current_camera_index =
 				(_current_camera_index - 1) % _camera_names.size();
 		}
@@ -2009,7 +2033,6 @@ namespace SaiGraphics
 		_active_side_panels[main_camera_name].push_back(frameBuffer);
 	}
 
-	// create a get function for a light from the world
 	chai3d::cGenericLight *SaiGraphics::getLight(const std::string &light_name)
 	{
 		for (unsigned int i = 0; i < _world->m_lights.size(); ++i)
@@ -2021,6 +2044,46 @@ namespace SaiGraphics
 			}
 		}
 		return nullptr;
+	}
+
+	std::vector<unsigned char> SaiGraphics::getFrameBuffer(const std::string &camera_name,
+														   int width, int height)
+	{
+		// Ensures the camera exists in your graphics world
+		auto it_cam = _camera_frame_buffers.find(camera_name);
+		if (it_cam == _camera_frame_buffers.end())
+		{
+			throw std::invalid_argument("Camera not found: " + camera_name);
+		}
+		chai3d::cCamera *camera = it_cam->second->getCamera();
+
+		// Initialization of the background frame buffer for this camera if it does not exist yet
+		if (_camera_fbo_map.find(camera_name) == _camera_fbo_map.end())
+		{
+			auto fb = chai3d::cFrameBuffer::create();
+			fb->setup(camera);
+			fb->setSize(width, height);
+			_camera_fbo_map[camera_name] = fb;
+		}
+
+		auto fb = _camera_fbo_map[camera_name];
+
+		// Update size if requested dimensions changed
+		if (fb->getWidth() != width || fb->getHeight() != height)
+		{
+			fb->setSize(width, height);
+		}
+
+		// Background Render and Capture
+		fb->renderView();
+
+		chai3d::cImagePtr image = chai3d::cImage::create();
+		fb->copyImageBuffer(image);
+
+		unsigned char *data = image->getData();
+		unsigned int size = image->getSizeInBytes();
+
+		return std::vector<unsigned char>(data, data + size);
 	}
 
 } // namespace SaiGraphics

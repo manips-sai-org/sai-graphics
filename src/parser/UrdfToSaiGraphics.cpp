@@ -381,6 +381,7 @@ namespace Parser
 									camera_ptr->lookat.z);
 			cVector3d camera_up(camera_ptr->vertical.x, camera_ptr->vertical.y,
 								camera_ptr->vertical.z);
+
 			camera->set(camera_position, camera_lookat, camera_up);
 
 			// TODO: parse from urdf
