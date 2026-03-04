@@ -189,6 +189,23 @@ namespace
 		}
 	}
 
+	bool glewInitialize() {
+		bool ret = false;
+	#ifdef GLEW_VERSION
+		// Initialize glew library
+		if (glewInit() != GLEW_OK) {
+			cout << "Failed to initialize glew library" << endl;
+			cout << glewGetErrorString(ret) << endl;
+			glfwTerminate();
+		}
+		else {
+		ret = true;
+		}
+	# endif
+		return ret;
+	}
+
+
 	GLFWwindow *glfwInitialize(const std::string &window_name)
 	{
 		/*------- Set up visualization -------*/
@@ -196,7 +213,7 @@ namespace
 		glfwSetErrorCallback(glfwError);
 
 		// initialize GLFW
-		glfwInit();
+		if (!glfwInit()) throw std::runtime_error("glfw init error");
 
 		// retrieve resolution of computer display and position window accordingly
 		GLFWmonitor *primary = glfwGetPrimaryMonitor();
@@ -212,12 +229,14 @@ namespace
 
 		// create window and make it current context
 		glfwWindowHint(GLFW_VISIBLE, 0);
+		
 		GLFWwindow *window =
 			glfwCreateWindow(windowW, windowH, window_name.c_str(), NULL, NULL);
 		glfwSetWindowPos(window, windowPosX, windowPosY);
 		glfwShowWindow(window);
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
+
 
 		return window;
 	}
@@ -320,7 +339,10 @@ namespace SaiGraphics
 
 	void SaiGraphics::initializeWindow(const std::string &window_name)
 	{
+
 		_window = glfwInitialize(window_name);
+
+		glewInitialize();
 
 		// set callbacks
 		glfwSetKeyCallback(_window, keySelect);

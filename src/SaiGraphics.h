@@ -14,6 +14,7 @@
 #include "widgets/ForceSensorDisplay.h"
 #include "widgets/UIForceWidget.h"
 
+#include <GL/glew.h>
 // clang-format off
 #include <GLFW/glfw3.h>	 //must be loaded after loading opengl/glew
 // clang-format on
