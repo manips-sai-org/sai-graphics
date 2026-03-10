@@ -160,6 +160,73 @@ GLFWwindow* glfwInitialize(const std::string& window_name) {
 
 	return window;
 }
+
+enum class MuscleLimbGroup {
+	kOther,
+	kRightArm,
+	kLeftArm,
+	kRightLeg,
+	kLeftLeg,
+};
+
+MuscleLimbGroup classifyMuscleLimbGroup(const SaiModel::MuscleNode& muscle) {
+	bool uses_right_arm = false;
+	bool uses_left_arm = false;
+	bool uses_right_leg = false;
+	bool uses_left_leg = false;
+
+	for (const auto& waypoint : muscle.contractor.muscle_tendon_path) {
+		const auto& link_name = waypoint.link_name;
+		uses_right_arm = uses_right_arm ||
+						 link_name.find("right_upper_arm") != std::string::npos ||
+						 link_name.find("right_hand") != std::string::npos;
+		uses_left_arm = uses_left_arm ||
+						link_name.find("left_upper_arm") != std::string::npos ||
+						link_name.find("left_hand") != std::string::npos;
+		uses_right_leg = uses_right_leg ||
+						 link_name.find("right_thigh") != std::string::npos ||
+						 link_name.find("right_lower_leg") != std::string::npos ||
+						 link_name.find("right_foot") != std::string::npos;
+		uses_left_leg = uses_left_leg ||
+						link_name.find("left_thigh") != std::string::npos ||
+						link_name.find("left_lower_leg") != std::string::npos ||
+						link_name.find("left_foot") != std::string::npos;
+	}
+
+	if (uses_right_arm) {
+		return MuscleLimbGroup::kRightArm;
+	}
+	if (uses_left_arm) {
+		return MuscleLimbGroup::kLeftArm;
+	}
+	if (uses_right_leg) {
+		return MuscleLimbGroup::kRightLeg;
+	}
+	if (uses_left_leg) {
+		return MuscleLimbGroup::kLeftLeg;
+	}
+	return MuscleLimbGroup::kOther;
+}
+
+chai3d::cColorf muscleLimbGroupColor(const MuscleLimbGroup group) {
+	switch (group) {
+		case MuscleLimbGroup::kRightArm:
+			return chai3d::cColorf(0.86f, 0.27f, 0.23f);
+		case MuscleLimbGroup::kLeftArm:
+			return chai3d::cColorf(0.24f, 0.49f, 0.84f);
+		case MuscleLimbGroup::kRightLeg:
+			return chai3d::cColorf(0.96f, 0.63f, 0.17f);
+		case MuscleLimbGroup::kLeftLeg:
+			return chai3d::cColorf(0.22f, 0.67f, 0.42f);
+		case MuscleLimbGroup::kOther:
+		default:
+			return chai3d::cColorf(0.75f, 0.75f, 0.75f);
+	}
+}
+
+chai3d::cColorf sameLinkMuscleSegmentColor() {
+	return chai3d::cColorf(0.55f, 0.35f, 0.20f);
+}
 }  // namespace
 
 namespace SaiGraphics {
@@ -239,6 +306,7 @@ void SaiGraphics::clearWorld() {
 	_camera_names.clear();
 	_camera_frame_buffers.clear();
 	_force_sensor_displays.clear();
+	_muscle_tendon_path_lines.clear();
 	_ui_force_widgets.clear();
 	_camera_link_attachments.clear();
 }
@@ -420,6 +488,70 @@ void SaiGraphics::updateDisplayedForceSensor(
 	}
 	_force_sensor_displays.at(sensor_index)
 		->update(force_data.force_world_frame, force_data.moment_world_frame);
+}
+
+void SaiGraphics::addMuscleTendonPathDisplay(
+	const std::string& muscle_xml_path, const std::string& robot_name,
+	const double line_width) {
+	
+	auto robot_it = _robot_models.find(robot_name);
+	if (robot_it == _robot_models.end()) {
+		throw std::invalid_argument(
+			"robot not found in SaiGraphics::addMuscleTendonPathDisplay");
+	}
+	const auto& robot_model = robot_it->second;
+	const auto muscle_system = SaiModel::parseMuscleXML(
+		muscle_xml_path, [&robot_model](const std::string& link_name) {
+			return robot_model->isLinkInRobot(link_name);
+		});
+
+	for (const auto& muscle : muscle_system.muscles) {
+		const auto& waypoints = muscle.contractor.muscle_tendon_path;
+		const auto limb_color =
+			muscleLimbGroupColor(classifyMuscleLimbGroup(muscle));
+		for (size_t i = 0; i + 1 < waypoints.size(); ++i) {
+			const Eigen::Vector3d point_a =
+				robot_model->positionInWorld(waypoints[i].link_name,
+											 waypoints[i].point);
+			const Eigen::Vector3d point_b =
+				robot_model->positionInWorld(waypoints[i + 1].link_name,
+											 waypoints[i + 1].point);
+			const auto line_color =
+				waypoints[i].link_name == waypoints[i + 1].link_name
+					? sameLinkMuscleSegmentColor()
+					: limb_color;
+
+			auto* display_line = new chai3d::cShapeLine();
+			display_line->m_pointA = chai3d::cVector3d(point_a);
+			display_line->m_pointB = chai3d::cVector3d(point_b);
+			display_line->m_colorPointA = line_color;
+			display_line->m_colorPointB = line_color;
+			display_line->setLineWidth(line_width);
+
+			_world->addChild(display_line);
+			_muscle_tendon_path_lines.push_back(
+				{robot_name, waypoints[i], waypoints[i + 1], display_line});
+		}
+	}
+}
+
+void SaiGraphics::updateMuscleTendonPathDisplay() {
+	for (const auto& segment : _muscle_tendon_path_lines) {
+		auto robot_it = _robot_models.find(segment.robot_name);
+		if (robot_it == _robot_models.end()) {
+			throw std::invalid_argument(
+				"robot not found in SaiGraphics::updateMuscleTendonPathDisplay");
+		}
+
+		const auto& robot_model = robot_it->second;
+		const Eigen::Vector3d point_a = robot_model->positionInWorld(
+			segment.point_a_waypoint.link_name, segment.point_a_waypoint.point);
+		const Eigen::Vector3d point_b = robot_model->positionInWorld(
+			segment.point_b_waypoint.link_name, segment.point_b_waypoint.point);
+
+		segment.line->m_pointA = chai3d::cVector3d(point_a);
+		segment.line->m_pointB = chai3d::cVector3d(point_b);
+	}
 }
 
 bool SaiGraphics::robotExistsInWorld(const std::string& robot_name,

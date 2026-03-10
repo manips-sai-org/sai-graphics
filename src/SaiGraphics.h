@@ -311,6 +311,26 @@ public:
 	void updateDisplayedForceSensor(
 		const SaiModel::ForceSensorData& force_data);
 
+	/**
+	 * @brief Parse a muscle XML file and add line segments for each adjacent
+	 * tendon waypoint pair to the graphics world.
+	 *
+	 * @param muscle_xml_path path to the muscle XML file parsed with
+	 * SaiModel::parseMuscleXML
+	 * @param robot_name name of the robot to use for waypoint transforms. If
+	 * empty, the robot name declared in the muscle XML is used.
+	 * @param line_width width of the rendered line segments
+	 */
+	void addMuscleTendonPathDisplay(const std::string& muscle_xml_path,
+									const std::string& robot_name = "",
+									const double line_width = 2.0);
+
+	/**
+	 * @brief Update all displayed muscle tendon path segments from the current
+	 * robot state.
+	 */
+	void updateMuscleTendonPathDisplay();
+
 	/// @brief returns true if the given key is pressed, false otherwise
 	bool isKeyPressed(int key) const {
 		return glfwGetKey(_window, key) == GLFW_PRESS;
@@ -352,6 +372,14 @@ public:
 
 	/// @brief returns true if the camera exists in the world, false otherwise
 	bool cameraExistsInWorld(const std::string& camera_name) const;
+
+	/// @brief returns pointer to robot model
+	std::shared_ptr<SaiModel::SaiModel> getRobot(const std::string& name) {
+		if (_robot_models.find(name) == _robot_models.end()) {
+			throw runtime_error("robot name not found in models");
+		}
+		return _robot_models[name];
+	}
 
 private:
 	/**
@@ -462,6 +490,13 @@ private:
 	int findForceSensorDisplay(const std::string& robot_or_object_name,
 							   const std::string& link_name) const;
 
+	struct MuscleTendonPathSegmentDisplay {
+		std::string robot_name;
+		SaiModel::Waypoint point_a_waypoint;
+		SaiModel::Waypoint point_b_waypoint;
+		chai3d::cShapeLine* line;
+	};
+
 	/// @brief pointer to the chai3d world
 	chai3d::cWorld* _world;
 
@@ -492,6 +527,9 @@ private:
 
 	/// @brief vector of force sensor displays
 	std::vector<std::shared_ptr<ForceSensorDisplay>> _force_sensor_displays;
+
+	/// @brief line segment metadata used to render and update muscle tendon paths
+	std::vector<MuscleTendonPathSegmentDisplay> _muscle_tendon_path_lines;
 
 	/// @brief vector of camera names in the world
 	std::vector<std::string> _camera_names;
