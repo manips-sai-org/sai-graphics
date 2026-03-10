@@ -220,12 +220,16 @@ chai3d::cColorf muscleLimbGroupColor(const MuscleLimbGroup group) {
 			return chai3d::cColorf(0.22f, 0.67f, 0.42f);
 		case MuscleLimbGroup::kOther:
 		default:
-			return chai3d::cColorf(0.75f, 0.75f, 0.75f);
+			return chai3d::cColorf(0.53f, 0.31f, 0.78f);
 	}
 }
 
-chai3d::cColorf sameLinkMuscleSegmentColor() {
-	return chai3d::cColorf(0.55f, 0.35f, 0.20f);
+chai3d::cColorf muscleEndpointWaypointColor() {
+	return chai3d::cColorf(0.16f, 0.72f, 0.29f);
+}
+
+chai3d::cColorf muscleIntermediateWaypointColor() {
+	return chai3d::cColorf(0.93f, 0.82f, 0.18f);
 }
 }  // namespace
 
@@ -268,6 +272,7 @@ void SaiGraphics::initializeWorld(const std::string& path_to_world_file,
 	for (auto it : _camera_frame_buffers) {
 		_camera_names.push_back(it.first);
 	}
+	initializeMuscleTendonHoverLabels();
 	for (auto robot_filename : _robot_filenames) {
 		// get robot base object in chai world
 		cRobotBase* base = NULL;
@@ -307,8 +312,74 @@ void SaiGraphics::clearWorld() {
 	_camera_frame_buffers.clear();
 	_force_sensor_displays.clear();
 	_muscle_tendon_path_lines.clear();
+	_muscle_tendon_waypoints.clear();
+	_muscle_tendon_hover_labels.clear();
+	_muscle_tendon_hover_font.reset();
 	_ui_force_widgets.clear();
 	_camera_link_attachments.clear();
+}
+
+void SaiGraphics::initializeMuscleTendonHoverLabels() {
+	_muscle_tendon_hover_font = NEW_CFONTCALIBRI20();
+	for (const auto& camera_name : _camera_names) {
+		auto* hover_label = new chai3d::cLabel(_muscle_tendon_hover_font);
+		hover_label->setFontScale(3.5);
+		hover_label->m_fontColor.setRedCrimson();
+		hover_label->setShowEnabled(false);
+		getCamera(camera_name)->m_frontLayer->addChild(hover_label);
+		_muscle_tendon_hover_labels[camera_name] = hover_label;
+	}
+}
+
+void SaiGraphics::updateMuscleTendonHoverLabel(const std::string& camera_name,
+												 const double cursorx,
+												 const double cursory,
+												 const int window_width_screen,
+												 const int window_height_screen) {
+	auto label_it = _muscle_tendon_hover_labels.find(camera_name);
+	if (label_it == _muscle_tendon_hover_labels.end()) {
+		return;
+	}
+
+	auto* hover_label = label_it->second;
+	hover_label->setShowEnabled(false);
+
+	if (_muscle_tendon_waypoints.empty() || window_width_screen <= 0 ||
+		window_height_screen <= 0) {
+		return;
+	}
+
+	const int viewx = floor(cursorx / window_width_screen * _window_width);
+	const int viewy = floor(cursory / window_height_screen * _window_height);
+
+	chai3d::cCollisionRecorder collision_recorder;
+	chai3d::cCollisionSettings collision_settings;
+	const bool hit = getCamera(camera_name)->selectWorld(
+		viewx, _window_height - viewy, _window_width, _window_height,
+		collision_recorder, collision_settings);
+	if (!hit) {
+		return;
+	}
+
+	const chai3d::cGenericObject* hit_object =
+		collision_recorder.m_nearestCollision.m_object;
+	for (const auto& waypoint_display : _muscle_tendon_waypoints) {
+		if (waypoint_display.sphere != hit_object) {
+			continue;
+		}
+
+		hover_label->setText(waypoint_display.muscle_name);
+		const int label_x = std::min(
+			std::max(0, viewx + 14),
+			std::max(0, _window_width - static_cast<int>(hover_label->getWidth())));
+		const int label_y = std::min(
+			std::max(0, _window_height - viewy + 18),
+			std::max(0, _window_height -
+						 static_cast<int>(hover_label->getHeight())));
+		hover_label->setLocalPos(label_x, label_y, 0);
+		hover_label->setShowEnabled(true);
+		return;
+	}
 }
 
 void SaiGraphics::initializeWindow(const std::string& window_name) {
@@ -493,7 +564,6 @@ void SaiGraphics::updateDisplayedForceSensor(
 void SaiGraphics::addMuscleTendonPathDisplay(
 	const std::string& muscle_xml_path, const std::string& robot_name,
 	const double line_width) {
-	
 	auto robot_it = _robot_models.find(robot_name);
 	if (robot_it == _robot_models.end()) {
 		throw std::invalid_argument(
@@ -509,6 +579,23 @@ void SaiGraphics::addMuscleTendonPathDisplay(
 		const auto& waypoints = muscle.contractor.muscle_tendon_path;
 		const auto limb_color =
 			muscleLimbGroupColor(classifyMuscleLimbGroup(muscle));
+		for (size_t i = 0; i < waypoints.size(); ++i) {
+			const Eigen::Vector3d point = robot_model->positionInWorld(
+				waypoints[i].link_name, waypoints[i].point);
+			auto sphere_color =
+				(i == 0 || i + 1 == waypoints.size())
+					? muscleEndpointWaypointColor()
+					: muscleIntermediateWaypointColor();
+
+			auto* waypoint_sphere = new chai3d::cShapeSphere(0.004);
+			waypoint_sphere->setLocalPos(chai3d::cVector3d(point));
+			waypoint_sphere->m_material->setColor(sphere_color);
+
+			_world->addChild(waypoint_sphere);
+			_muscle_tendon_waypoints.push_back(
+				{robot_name, muscle.muscle_name, waypoints[i], waypoint_sphere});
+		}
+
 		for (size_t i = 0; i + 1 < waypoints.size(); ++i) {
 			const Eigen::Vector3d point_a =
 				robot_model->positionInWorld(waypoints[i].link_name,
@@ -516,16 +603,11 @@ void SaiGraphics::addMuscleTendonPathDisplay(
 			const Eigen::Vector3d point_b =
 				robot_model->positionInWorld(waypoints[i + 1].link_name,
 											 waypoints[i + 1].point);
-			const auto line_color =
-				waypoints[i].link_name == waypoints[i + 1].link_name
-					? sameLinkMuscleSegmentColor()
-					: limb_color;
-
 			auto* display_line = new chai3d::cShapeLine();
 			display_line->m_pointA = chai3d::cVector3d(point_a);
 			display_line->m_pointB = chai3d::cVector3d(point_b);
-			display_line->m_colorPointA = line_color;
-			display_line->m_colorPointB = line_color;
+			display_line->m_colorPointA = limb_color;
+			display_line->m_colorPointB = limb_color;
 			display_line->setLineWidth(line_width);
 
 			_world->addChild(display_line);
@@ -551,6 +633,19 @@ void SaiGraphics::updateMuscleTendonPathDisplay() {
 
 		segment.line->m_pointA = chai3d::cVector3d(point_a);
 		segment.line->m_pointB = chai3d::cVector3d(point_b);
+	}
+
+	for (const auto& waypoint_display : _muscle_tendon_waypoints) {
+		auto robot_it = _robot_models.find(waypoint_display.robot_name);
+		if (robot_it == _robot_models.end()) {
+			throw std::invalid_argument(
+				"robot not found in SaiGraphics::updateMuscleTendonPathDisplay");
+		}
+
+		const auto& robot_model = robot_it->second;
+		const Eigen::Vector3d point = robot_model->positionInWorld(
+			waypoint_display.waypoint.link_name, waypoint_display.waypoint.point);
+		waypoint_display.sphere->setLocalPos(chai3d::cVector3d(point));
 	}
 }
 
@@ -726,6 +821,8 @@ void SaiGraphics::renderGraphicsWorld() {
 	glfwGetCursorPos(_window, &cursorx, &cursory);
 	double mouse_x_increment = (cursorx - _last_cursorx);
 	double mouse_y_increment = (cursory - _last_cursory);
+	int wwidth_scr, wheight_scr;
+	glfwGetWindowSize(_window, &wwidth_scr, &wheight_scr);
 
 	// 0 - scroll event
 	double scroll_value = 0.0;
@@ -741,9 +838,6 @@ void SaiGraphics::renderGraphicsWorld() {
 				widget->setEnable(true);
 			}
 		}
-
-		int wwidth_scr, wheight_scr;
-		glfwGetWindowSize(_window, &wwidth_scr, &wheight_scr);
 
 		int viewx = floor(cursorx / wwidth_scr * _window_width);
 		int viewy = floor(cursory / wheight_scr * _window_height);
@@ -883,6 +977,8 @@ void SaiGraphics::renderGraphicsWorld() {
 
 	// update shadow maps
 	_world->updateShadowMaps();
+	updateMuscleTendonHoverLabel(camera_name, cursorx, cursory, wwidth_scr,
+								   wheight_scr);
 
 	render(camera_name);
 }

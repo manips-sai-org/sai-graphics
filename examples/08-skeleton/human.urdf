@@ -116,6 +116,20 @@
     </visual>
   </link>
 
+  <joint name="pelvis_base_fixed" type="fixed">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <parent link="pelvis"/>
+      <child link="base"/>
+  </joint>
+
+  <link name="base">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
+    </inertial>
+  </link>
+
   <joint name="waist_roll" type="revolute">
     <parent link="pelvis"/>
     <child link="lumbar_link"/>
@@ -169,6 +183,19 @@
     <visual> <origin rpy="0 0 0" xyz="0.0199 -0.1774 0.4536"/> <geometry> <mesh filename="graphics/scapula_r_ls.obj"/> </geometry> </visual>
     <visual> <origin rpy="0 0 0" xyz="0.0112 0.0220 0.4549"/> <geometry> <mesh filename="graphics/clavicle_l_ls.obj"/> </geometry> </visual>
     <visual> <origin rpy="0 0 0" xyz="0.0199 0.1774 0.4536"/> <geometry> <mesh filename="graphics/scapula_l_ls.obj"/> </geometry> </visual>
+  </link>
+
+  <joint name="torso_chest_fixed" type="fixed">
+    <parent link="torso"/>
+    <child link="chest"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+  <link name="chest">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
   </link>
 
   <joint name="neck_pitch" type="revolute">

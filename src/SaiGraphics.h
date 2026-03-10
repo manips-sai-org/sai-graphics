@@ -18,6 +18,8 @@
 #include <GLFW/glfw3.h>	 //must be loaded after loading opengl/glew
 // clang-format on
 
+#include <unordered_map>
+
 namespace SaiGraphics {
 
 /**
@@ -397,6 +399,14 @@ private:
 	 */
 	void clearWorld();
 
+	void initializeMuscleTendonHoverLabels();
+
+	void updateMuscleTendonHoverLabel(const std::string& camera_name,
+									  const double cursorx,
+									  const double cursory,
+									  const int window_width_screen,
+									  const int window_height_screen);
+
 	/**
 	 * @brief initialize the glfw window with the given window name
 	 *
@@ -497,6 +507,13 @@ private:
 		chai3d::cShapeLine* line;
 	};
 
+	struct MuscleTendonWaypointDisplay {
+		std::string robot_name;
+		std::string muscle_name;
+		SaiModel::Waypoint waypoint;
+		chai3d::cShapeSphere* sphere;
+	};
+
 	/// @brief pointer to the chai3d world
 	chai3d::cWorld* _world;
 
@@ -530,6 +547,15 @@ private:
 
 	/// @brief line segment metadata used to render and update muscle tendon paths
 	std::vector<MuscleTendonPathSegmentDisplay> _muscle_tendon_path_lines;
+
+	/// @brief waypoint metadata used to render and update muscle tendon points
+	std::vector<MuscleTendonWaypointDisplay> _muscle_tendon_waypoints;
+
+	/// @brief front-layer hover labels keyed by camera name
+	std::map<std::string, chai3d::cLabel*> _muscle_tendon_hover_labels;
+
+	/// @brief font used for tendon hover labels
+	chai3d::cFontPtr _muscle_tendon_hover_font;
 
 	/// @brief vector of camera names in the world
 	std::vector<std::string> _camera_names;

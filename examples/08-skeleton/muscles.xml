@@ -122,11 +122,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0010, -0.0231, 0.1496</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0229, -0.0159, 0.0231</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.0863, -0.0378, 0.0228</point>
 </muscleTendonPath>
 <optFiberLength>0.0790</optFiberLength>
@@ -149,19 +149,19 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0005, -0.0362, 0.2732</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0207, -0.0286, 0.0095</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0162, -0.0289, -0.0019</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.0444, -0.0300, 0.0230</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.0687, -0.0363, 0.0106</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.0858, -0.0197, 0.0070</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.1209, 0.0105, 0.0085</point>
 </muscleTendonPath>
 <optFiberLength>0.0490</optFiberLength>
@@ -184,15 +184,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0070, -0.0325, 0.1654</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0198, -0.0283, 0.0116</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0144, -0.0289, 0.0005</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.0477, -0.0312, 0.0270</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.0683, -0.0422, 0.0219</point>
 </muscleTendonPath>
 <optFiberLength>0.0500</optFiberLength>
@@ -215,11 +215,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0179, -0.0115, 0.2676</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0329, 0.0177, 0.0349</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.1172, 0.0226, 0.0178</point>
 </muscleTendonPath>
 <optFiberLength>0.0980</optFiberLength>
@@ -242,13 +242,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0094, -0.0019, 0.2952</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0144, 0.0229, 0.0249</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.0349, 0.0207, 0.0334</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.0778, 0.0202, 0.0159</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -271,9 +271,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0024, -0.0071, 0.2767</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.005, -0.0026, 0.0310</point>
 </muscleTendonPath>
 <optFiberLength>0.0300</optFiberLength>
@@ -296,13 +296,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_leg</linkName>-0.0444, -0.0026, -0.0110
+<linkName>right-upper-leg</linkName>-0.0444, -0.0026, -0.0110
 <point>-0.0155, -0.0272, 0.0014</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0254, -0.0274, -0.0058</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0242, -0.0235, 0.3819</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.005, -0.0026, 0.0310</point>
 </muscleTendonPath>
 <optFiberLength>0.0640</optFiberLength>
@@ -325,13 +325,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0127, 0.0235, 0.0031</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0239, 0.0258, -0.0062</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0217, 0.0295, 0.3813</point>
-<linkName>pelvis</linkName>
+<linkName>base</linkName>
 <point>0.005, -0.0026, 0.0310</point>
 </muscleTendonPath>
 <optFiberLength>0.0450</optFiberLength>
@@ -354,15 +354,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0048, -0.0349, 0.2106</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0269, -0.0409, 0.1369</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0361, -0.0205, -0.0070</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0253, -0.0184, -0.0283</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0599, -0.0165, 0.4496</point>
 </muscleTendonPath>
 <optFiberLength>0.0840</optFiberLength>
@@ -385,13 +385,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0290, -0.0310, 0.2036</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0335, -0.0285, 0.1876</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0343, -0.0055, -0.0070</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0554, -0.0018, 0.4553</point>
 </muscleTendonPath>
 <optFiberLength>0.0870</optFiberLength>
@@ -414,15 +414,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0140, -0.0188, 0.1861</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0356, -0.0009, 0.1191</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0370, 0.0125, -0.0088</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0274, 0.0131, -0.0295</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0559, 0.0146, 0.4518</point>
 </muscleTendonPath>
 <optFiberLength>0.0890</optFiberLength>
@@ -445,9 +445,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.005, -0.0234, 0.1849</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0101, -0.0406, 0.3575</point>
 </muscleTendonPath>
 <optFiberLength>0.1730</optFiberLength>
@@ -470,9 +470,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0274, 0.0131, -0.0295</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0081, -0.0423, 0.3571</point>
 </muscleTendonPath>
 <optFiberLength>0.1090</optFiberLength>
@@ -495,13 +495,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.053, 0.0232, -0.0382</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0314, 0.0146, 0.3755</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0113, 0.0245, 0.3554</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0027, 0.0193, 0.3344</point>
 </muscleTendonPath>
 <optFiberLength>0.2010</optFiberLength>
@@ -524,9 +524,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0485, 0.014, -0.0354</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0243, 0.0194, 0.3764</point>
 </muscleTendonPath>
 <optFiberLength>0.0800</optFiberLength>
@@ -549,11 +549,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0144, 0.0756, -0.0377</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0154, 0.0358, 0.3825</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.006, 0.0228, 0.3464</point>
 </muscleTendonPath>
 <optFiberLength>0.3520</optFiberLength>
@@ -576,13 +576,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0396, -0.0406, 0.0875</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0294, -0.0597, 0.2965</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0054, -0.0357, -0.0089</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.006, -0.0297, 0.3813</point>
 </muscleTendonPath>
 <optFiberLength>0.0950</optFiberLength>
@@ -605,11 +605,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0412, -0.0133, 0.0350</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0334, -0.0019, -0.0070</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0617, -0.0014, 0.4510</point>
 </muscleTendonPath>
 <optFiberLength>0.0840</optFiberLength>
@@ -632,15 +632,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0554, -0.0407, 0.0648</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0030, 0.0421, 0.0392</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>-0.0056, 0.0399, 0.3881</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0060, 0.0383, 0.3711</point>
-<linkName>right_lower_leg</linkName>
+<linkName>right-lower-leg</linkName>
 <point>0.0243, 0.0252, 0.3460</point>
 </muscleTendonPath>
 <optFiberLength>0.5790</optFiberLength>
@@ -663,9 +663,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0064, 0.0559, -0.0520</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0070, 0.0266, 0.0123</point>
 </muscleTendonPath>
 <optFiberLength>0.1310</optFiberLength>
@@ -688,9 +688,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0124, 0.0527, -0.0531</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0054, -0.0227, 0.1675</point>
 </muscleTendonPath>
 <optFiberLength>0.1210</optFiberLength>
@@ -713,9 +713,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0025, 0.0580, -0.0513</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0045, -0.0339, 0.2749</point>
 </muscleTendonPath>
 <optFiberLength>0.0870</optFiberLength>
@@ -738,9 +738,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0120, 0.0671, -0.0254</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0009, -0.0294, 0.2764</point>
 </muscleTendonPath>
 <optFiberLength>0.1330</optFiberLength>
@@ -763,9 +763,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0391, 0.0666, -0.0175</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>0.0050, -0.0234, 0.1849</point>
 </muscleTendonPath>
 <optFiberLength>0.1380</optFiberLength>
@@ -788,9 +788,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0516, 0.0187, 0.0766</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0309, -0.0518, 0.3913</point>
 </muscleTendonPath>
 <optFiberLength>0.0646</optFiberLength>
@@ -813,9 +813,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0148, 0.0069, 0.1106</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0258, -0.0527, 0.3902</point>
 </muscleTendonPath>
 <optFiberLength>0.0845</optFiberLength>
@@ -838,9 +838,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0299, -0.0374, 0.0965</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0218, -0.0555, 0.3843</point>
 </muscleTendonPath>
 <optFiberLength>0.0535</optFiberLength>
@@ -863,13 +863,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0581, 0.0732, 0.0238</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0822, 0.0432, -0.0391</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0299, -0.0135, 0.2919</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.006, -0.0411, 0.2541</point>
 </muscleTendonPath>
 <optFiberLength>0.1440</optFiberLength>
@@ -892,13 +892,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0642, 0.0272, 0.0837</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0669, -0.0079, 0.0141</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0426, -0.0293, 0.343</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0156, -0.0419, 0.2944</point>
 </muscleTendonPath>
 <optFiberLength>0.1470</optFiberLength>
@@ -921,13 +921,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0488, 0.0135, 0.1273</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0584, -0.0051, 0.0673</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0457, -0.0392, 0.3712</point>
-<linkName>right_upper_leg</linkName>
+<linkName>right-upper-leg</linkName>
 <point>-0.0277, -0.047, 0.3394</point>
 </muscleTendonPath>
 <optFiberLength>0.1420</optFiberLength>
@@ -950,13 +950,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0841, 0.1103, 0.3097</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0927, 0.1012, 0.2813</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.089, 0.0825, 0.214</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0525, 0.1079, 0.0899</point>
 </muscleTendonPath>
 <optFiberLength>0.1417</optFiberLength>
@@ -979,13 +979,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0876, 0.0528, 0.3548</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0949, 0.0473, 0.3007</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0911, 0.0421, 0.2418</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0579, 0.0979, 0.0909</point>
 </muscleTendonPath>
 <optFiberLength>0.1168</optFiberLength>
@@ -1008,13 +1008,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.1046, 0.0469, 0.2826</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.1131, 0.043, 0.2507</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.1172, 0.0402, 0.2299</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0438, 0.0989, -0.0051</point>
 </muscleTendonPath>
 <optFiberLength>0.2798</optFiberLength>
@@ -1037,9 +1037,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0371, 0.0316, 0.1476</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0292, 0.1424, 0.1463</point>
 </muscleTendonPath>
 <optFiberLength>0.0825</optFiberLength>
@@ -1062,9 +1062,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0243, 0.0303, 0.1154</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0402, 0.1373, 0.1335</point>
 </muscleTendonPath>
 <optFiberLength>0.0562</optFiberLength>
@@ -1088,13 +1088,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0841, -0.1103, 0.3097</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0927, -0.1012, 0.2813</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.089, -0.0825, 0.214</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0525, 0.0591, 0.0899</point>
 </muscleTendonPath>
 <optFiberLength>0.1417</optFiberLength>
@@ -1117,13 +1117,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0876, -0.0528, 0.3548</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0949, -0.0473, 0.3007</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0911, -0.0421, 0.2418</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0579, 0.0691, 0.0909</point>
 </muscleTendonPath>
 <optFiberLength>0.1168</optFiberLength>
@@ -1146,13 +1146,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.1046, -0.0469, 0.2826</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.1131, -0.043, 0.2507</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.1172, -0.0402, 0.2299</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0438, 0.0681, -0.0051</point>
 </muscleTendonPath>
 <optFiberLength>0.2798</optFiberLength>
@@ -1175,9 +1175,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0371, -0.0316, 0.1476</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0292, 0.0246, 0.1463</point>
 </muscleTendonPath>
 <optFiberLength>0.0825</optFiberLength>
@@ -1200,9 +1200,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0243, -0.0303, 0.1154</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0402, 0.0297, 0.1335</point>
 </muscleTendonPath>
 <optFiberLength>0.0562</optFiberLength>
@@ -1225,11 +1225,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0737, 0.1123, 0.3731</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0537, 0.1416, 0.3879</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00109, 0.01553, 0.01082</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1252,11 +1252,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0659, 0.1266, 0.3407</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0432, 0.1599, 0.3695</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>-0.00115, 0.01504, 0.00743</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1279,11 +1279,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0612, 0.1345, 0.2936</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0423, 0.1727, 0.3534</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>-0.00384, 0.01581, 0.00366</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1306,9 +1306,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0614, 0.1126, 0.4221</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01135, 0.00961, 0.01339</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1331,9 +1331,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0681, 0.1215, 0.4060</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01135, 0.00961, 0.01339</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1356,9 +1356,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0554, 0.1259, 0.4103</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01135, 0.00961, 0.01339</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1381,11 +1381,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0509, 0.1642, 0.3105</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0466, 0.1676, 0.3148</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00096, -0.01335, -0.05393</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1408,11 +1408,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0532, 0.1514, 0.3001</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0483, 0.1665, 0.3078</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00092, -0.01278, -0.05884</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1435,11 +1435,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0507, 0.1558, 0.2875</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0476, 0.1641, 0.2955</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>-0.00001, -0.01177, -0.06794</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1462,9 +1462,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.1053, 0.0052, 0.2950</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00818, -0.01213, -0.06266</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1487,9 +1487,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0987, 0.0057, 0.2695</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00935, -0.01208, -0.05756</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1512,9 +1512,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0907, 0.0359, 0.2220</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01008, -0.01230, -0.05428</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1537,9 +1537,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0733, 0.0653, 0.1782</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00962, -0.01200, -0.05013</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1562,9 +1562,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0541, 0.0937, 0.1378</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00901, -0.01143, -0.04507</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1587,11 +1587,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0386, 0.0138, 0.4195</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.0064, -0.01294, -0.05376</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01297, -0.00634, -0.05967</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1614,11 +1614,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0621, 0.0116, 0.3801</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00593, -0.01433, -0.04892</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01255, -0.00564, -0.05318</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1641,11 +1641,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0803, 0.0111, 0.346</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00193, -0.01702, -0.04315</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01451, -0.00612, -0.04444</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1668,11 +1668,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0913, 0.0305, 0.3087</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00031, -0.01637, -0.03723</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.0165, -0.00607, -0.03146</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -1695,17 +1695,17 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0513, 0.1588, 0.4154</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.0478, -0.00405, -0.26151</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>0.00017, 0.03158, -0.02041</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>0.00217, 0.02678, -0.02661</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>0.00067, 0.02258, -0.03091</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.00761, 0.02049, -0.0434</point>
 </muscleTendonPath>
 <optFiberLength>0.1500</optFiberLength>
@@ -1728,23 +1728,23 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0156, 0.1726, 0.4239</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01063, -0.00703, 0.02026</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01842, 0.00485, 0.01066</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.02277, 0.00569, -0.00152</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.0478, -0.00405, -0.26151</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>0.00017, 0.03158, -0.02041</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>0.00217, 0.02678, -0.02661</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>0.00067, 0.02258, -0.03091</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.00761, 0.02049, -0.0434</point>
 </muscleTendonPath>
 <optFiberLength>0.1360</optFiberLength>
@@ -1767,9 +1767,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0013, 0.1881, 0.3849</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.03182, -0.00064, 0.0063</point>
 </muscleTendonPath>
 <optFiberLength>0.10200</optFiberLength>
@@ -1792,11 +1792,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>-0.0067, -0.00816, -0.17078</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>-0.01158, -0.00932, -0.1928</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.03208, -0.00083, 0.00626</point>
 </muscleTendonPath>
 <optFiberLength>0.06300</optFiberLength>
@@ -1819,9 +1819,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>-0.00885, 0.00034, -0.0993</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.03162, -0.00044, 0.00664</point>
 </muscleTendonPath>
 <optFiberLength>0.0840</optFiberLength>
@@ -1844,11 +1844,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01051, -0.0052, -0.16117</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.03618, -0.01253, -0.26503</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.00751, 0.00243, -0.03263</point>
 </muscleTendonPath>
 <optFiberLength>0.11500</optFiberLength>
@@ -1871,9 +1871,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00964, -0.00053, -0.22887</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.00751, 0.00243, -0.03263</point>
 </muscleTendonPath>
 <optFiberLength>0.11500</optFiberLength>
@@ -1896,9 +1896,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01021, -0.01524, -0.24816</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.00751, 0.00243, -0.03263</point>
 </muscleTendonPath>
 <optFiberLength>0.11500</optFiberLength>
@@ -1921,11 +1921,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00540, 0.01371, -0.28826</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.03223, 0.00849, -0.01143</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.03179, 0.00328, -0.01650</point>
 </muscleTendonPath>
 <optFiberLength>0.20000</optFiberLength>
@@ -1948,11 +1948,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00540, 0.01371, -0.28826</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.03118, 0.01515, -0.02338</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.03047, 0.00815, -0.04150</point>
 </muscleTendonPath>
 <optFiberLength>0.20000</optFiberLength>
@@ -1975,15 +1975,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00661, -0.03651, -0.28532</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>0.00313, 0.03835, -0.24288</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>0.0115, 0.00649, -0.00604</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>0.01713,0.00751, -0.02145</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>0.00491, 0.00593, -0.02593</point>
 </muscleTendonPath>
 <optFiberLength>0.06280</optFiberLength>
@@ -2006,15 +2006,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.00479, -0.03647, -0.2854</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.00481, 0.01604, -0.24215</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.01416, 0.01802, -0.24384</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>0.01098, -0.01836, -0.02126</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>0.00336, -0.01908, -0.02938</point>
 </muscleTendonPath>
 <optFiberLength>0.05090</optFiberLength>
@@ -2037,19 +2037,19 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.02347, 0.0199, -0.28521</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.0092, 0.03779, -0.02578</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.01805, 0.03359, -0.05159</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.02543, 0.01719, -0.10205</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.03075, 0.03059, -0.24263</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>-0.01219, -0.01829, -0.01292</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>-0.00883, -0.02199, -0.03177</point>
 </muscleTendonPath>
 <optFiberLength>0.06220</optFiberLength>
@@ -2072,15 +2072,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.02333, 0.01989, -0.2853</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.01071, 0.05952, -0.15006</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.02099, 0.06211, -0.23893</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>-0.0151, 0.01104, -0.01211</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>-0.01291, 0.00357, -0.0319</point>
 </muscleTendonPath>
 <optFiberLength>0.05850</optFiberLength>
@@ -2103,19 +2103,19 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.01384, 0.02512, -0.27885</point>
-<linkName>left_upper_arm</linkName>
+<linkName>left-upper-arm</linkName>
 <point>0.02317, 0.01985, -0.28552</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.00813, 0.05919, -0.15497</point>
-<linkName>left_lower_arm</linkName>
+<linkName>left-lower-arm</linkName>
 <point>-0.01532, 0.06489, -0.24111</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>-0.01173, 0.01855, -0.01359</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>-0.01034, 0.01671, -0.02575</point>
-<linkName>left_hand</linkName>
+<linkName>left-hand</linkName>
 <point>-0.00707, 0.01521, -0.02969</point>
 </muscleTendonPath>
 <optFiberLength>0.09360</optFiberLength>
@@ -2138,11 +2138,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0737, -0.1123, 0.3731</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0537, -0.1416, 0.3879</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00109, -0.01553, 0.01082</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2165,11 +2165,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0659, -0.1266, 0.3407</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0432, -0.1599, 0.3695</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>-0.00115, -0.01504, 0.00743</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2192,11 +2192,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0612, -0.1345, 0.2936</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0423, -0.1727, 0.3534</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>-0.00384, -0.01581, 0.00366</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2219,9 +2219,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0614, -0.1126, 0.4221</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01135, -0.00961, 0.01339</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2244,9 +2244,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0681, -0.1215, 0.4060</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01135, -0.00961, 0.01339</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2269,9 +2269,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0554, -0.1259, 0.4103</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01135, -0.00961, 0.01339</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2294,11 +2294,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0509, -0.1642, 0.3105</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0466, -0.1676, 0.3148</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00096, 0.01335, -0.05393</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2321,11 +2321,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0532, -0.1514, 0.3001</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0483, -0.1665, 0.3078</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00092, 0.01278, -0.05884</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2348,11 +2348,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0507, -0.1558, 0.2875</point>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0476, -0.1641, 0.2955</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>-0.00001, 0.01177, -0.06794</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2375,9 +2375,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.1053, -0.0052, 0.2950</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00818, 0.01213, -0.06266</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2400,9 +2400,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0987, -0.0057, 0.2695</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00935, 0.01208, -0.05756</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2425,9 +2425,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0907, -0.0359, 0.2220</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01008, 0.01230, -0.05428</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2450,9 +2450,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0733, -0.0653, 0.1782</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00962, 0.01200, -0.05013</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2475,9 +2475,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>-0.0541, -0.0937, 0.1378</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00901, 0.01143, -0.04507</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2500,11 +2500,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0386, -0.0138, 0.4195</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.0064, 0.01294, -0.05376</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01297, 0.00634, -0.05967</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2527,11 +2527,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0621, -0.0116, 0.3801</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00593, 0.01433, -0.04892</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01255, 0.00564, -0.05318</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2554,11 +2554,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0803, -0.0111, 0.346</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00193, 0.01702, -0.04315</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01451, 0.00612, -0.04444</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2581,11 +2581,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0913, -0.0305, 0.3087</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00031, 0.01637, -0.03723</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.0165, 0.00607, -0.03146</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -2608,17 +2608,17 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0513, -0.1588, 0.4154</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.0478, 0.00405, -0.26151</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>0.00017, -0.03158, -0.02041</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>0.00217, -0.02678, -0.02661</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>0.00067, -0.02258, -0.03091</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.00761, -0.02049, -0.0434</point>
 </muscleTendonPath>
 <optFiberLength>0.1500</optFiberLength>
@@ -2641,23 +2641,23 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0156, -0.1726, 0.4239</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01063, 0.00703, 0.02026</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01842, -0.00485, 0.01066</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.02277, -0.00569, -0.00152</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.0478, 0.00405, -0.26151</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>0.00017, -0.03158, -0.02041</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>0.00217, -0.02678, -0.02661</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>0.00067, -0.02258, -0.03091</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.00761, -0.02049, -0.0434</point>
 </muscleTendonPath>
 <optFiberLength>0.1360</optFiberLength>
@@ -2680,9 +2680,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>torso</linkName>
+<linkName>chest</linkName>
 <point>0.0013, -0.1881, 0.3849</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.03182, 0.00064, 0.0063</point>
 </muscleTendonPath>
 <optFiberLength>0.10200</optFiberLength>
@@ -2705,11 +2705,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>-0.0067, 0.00816, -0.17078</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>-0.01158, 0.00932, -0.1928</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.03208, 0.00083, 0.00626</point>
 </muscleTendonPath>
 <optFiberLength>0.06300</optFiberLength>
@@ -2732,9 +2732,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>-0.00885, -0.00034, -0.0993</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.03162, 0.00044, 0.00664</point>
 </muscleTendonPath>
 <optFiberLength>0.0840</optFiberLength>
@@ -2757,11 +2757,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01051, 0.0052, -0.16117</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.03618, 0.01253, -0.26503</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.00751, -0.00243, -0.03263</point>
 </muscleTendonPath>
 <optFiberLength>0.11500</optFiberLength>
@@ -2784,9 +2784,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00964, 0.00053, -0.22887</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.00751, -0.00243, -0.03263</point>
 </muscleTendonPath>
 <optFiberLength>0.11500</optFiberLength>
@@ -2809,9 +2809,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01021, 0.01524, -0.24816</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.00751, -0.00243, -0.03263</point>
 </muscleTendonPath>
 <optFiberLength>0.11500</optFiberLength>
@@ -2834,11 +2834,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00540, -0.01371, -0.28826</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.03223, -0.00849, -0.01143</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.03179, -0.00328, -0.01650</point>
 </muscleTendonPath>
 <optFiberLength>0.20000</optFiberLength>
@@ -2861,11 +2861,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00540, -0.01371, -0.28826</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.03118, -0.01515, -0.02338</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.03047, -0.00815, -0.04150</point>
 </muscleTendonPath>
 <optFiberLength>0.20000</optFiberLength>
@@ -2888,15 +2888,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00661, 0.03651, -0.28532</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>0.00313, -0.03835, -0.24288</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>0.0115, -0.00649, -0.00604</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>0.01713, -0.00751, -0.02145</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>0.00491, -0.00593, -0.02593</point>
 </muscleTendonPath>
 <optFiberLength>0.06280</optFiberLength>
@@ -2919,15 +2919,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.00479, 0.03647, -0.2854</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.00481, -0.01604, -0.24215</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.01416, -0.01802, -0.24384</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>0.01098, 0.01836, -0.02126</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>0.00336, 0.01908, -0.02938</point>
 </muscleTendonPath>
 <optFiberLength>0.05090</optFiberLength>
@@ -2950,19 +2950,19 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.02347, -0.0199, -0.28521</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.0092, -0.03779, -0.02578</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.01805, -0.03359, -0.05159</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.02543, -0.01719, -0.10205</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.03075, -0.03059, -0.24263</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>-0.01219, 0.01829, -0.01292</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>-0.00883, 0.02199, -0.03177</point>
 </muscleTendonPath>
 <optFiberLength>0.06220</optFiberLength>
@@ -2985,15 +2985,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.02333, -0.01989, -0.2853</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.01071, -0.05952, -0.15006</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.02099, -0.06211, -0.23893</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>-0.0151, -0.01104, -0.01211</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>-0.01291, -0.00357, -0.0319</point>
 </muscleTendonPath>
 <optFiberLength>0.05850</optFiberLength>
@@ -3016,19 +3016,19 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.01384, -0.02512, -0.27885</point>
-<linkName>right_upper_arm</linkName>
+<linkName>right-upper-arm</linkName>
 <point>0.02317, -0.01985, -0.28552</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.00813, -0.05919, -0.15497</point>
-<linkName>right_lower_arm</linkName>
+<linkName>right-lower-arm</linkName>
 <point>-0.01532, -0.06489, -0.24111</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>-0.01173, -0.01855, -0.01359</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>-0.01034, -0.01671, -0.02575</point>
-<linkName>right_hand</linkName>
+<linkName>right-hand</linkName>
 <point>-0.00707, -0.01521, -0.02969</point>
 </muscleTendonPath>
 <optFiberLength>0.09360</optFiberLength>
@@ -3051,13 +3051,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0488, 0.1535, 0.1273</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0584, 0.1721, 0.0673</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0457, 0.0392, -0.0248</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0277, 0.047, -0.0566</point>
 </muscleTendonPath>
 <optFiberLength>0.1420</optFiberLength>
@@ -3080,13 +3080,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0642, 0.1398, 0.0837</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0669, 0.1749, 0.0141</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0426, 0.0293, -0.053</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0156, 0.0419, -0.1016</point>
 </muscleTendonPath>
 <optFiberLength>0.1470</optFiberLength>
@@ -3109,13 +3109,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0581, 0.0938, 0.0238</point>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0822, 0.1238, -0.0391</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0299, 0.0135, -0.1041</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.006, 0.0411, -0.1419</point>
 </muscleTendonPath>
 <optFiberLength>0.1440</optFiberLength>
@@ -3138,9 +3138,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0299, 0.2044, 0.0965</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0218, 0.0555, -0.0117</point>
 </muscleTendonPath>
 <optFiberLength>0.0535</optFiberLength>
@@ -3163,9 +3163,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0148, 0.1601, 0.1106</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0258, 0.0527, -0.0058</point>
 </muscleTendonPath>
 <optFiberLength>0.0845</optFiberLength>
@@ -3188,9 +3188,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0516, 0.1483, 0.0766</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0309, 0.0518, -0.0047</point>
 </muscleTendonPath>
 <optFiberLength>0.0646</optFiberLength>
@@ -3213,9 +3213,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0391, 0.1004, -0.0175</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0050, 0.0234, -0.2111</point>
 </muscleTendonPath>
 <optFiberLength>0.1380</optFiberLength>
@@ -3238,9 +3238,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0120, 0.0999, -0.0254</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0009, 0.0294, -0.1196</point>
 </muscleTendonPath>
 <optFiberLength>0.1330</optFiberLength>
@@ -3263,9 +3263,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0025, 0.1090, -0.0513</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0045, 0.0339, -0.1211</point>
 </muscleTendonPath>
 <optFiberLength>0.0870</optFiberLength>
@@ -3288,9 +3288,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0124, 0.1143, -0.0531</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0054, 0.0227, -0.2285</point>
 </muscleTendonPath>
 <optFiberLength>0.1210</optFiberLength>
@@ -3313,9 +3313,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0064, 0.1111, -0.0520</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0070, -0.0266, -0.3837</point>
 </muscleTendonPath>
 <optFiberLength>0.1310</optFiberLength>
@@ -3338,15 +3338,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0554, 0.2077, 0.0648</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0030, -0.0421, -0.3568</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0056, -0.0399, -0.0419</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0060, -0.0383, -0.0589</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0243, -0.0252, -0.0840</point>
 </muscleTendonPath>
 <optFiberLength>0.5790</optFiberLength>
@@ -3369,11 +3369,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0412, 0.1803, 0.0350</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0334, 0.0019, -0.4030 </point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0617, 0.0014, 0.0210</point>
 </muscleTendonPath>
 <optFiberLength>0.0840</optFiberLength>
@@ -3396,13 +3396,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0396, 0.2076, 0.0875</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0294, 0.0597, -0.0995</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0054, 0.0357, -0.4049</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.006, 0.0297, -0.0487</point>
 </muscleTendonPath>
 <optFiberLength>0.0950</optFiberLength>
@@ -3425,11 +3425,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>0.0144, 0.0914, -0.0377</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0154, -0.0358, -0.0475</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.006, -0.0228, -0.0836</point>
 </muscleTendonPath>
 <optFiberLength>0.3520</optFiberLength>
@@ -3452,9 +3452,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0485, 0.153, -0.0354</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0243, -0.0194, -0.0536</point>
 </muscleTendonPath>
 <optFiberLength>0.0800</optFiberLength>
@@ -3477,13 +3477,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.053, 0.1438, -0.0382</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0314, -0.0146, -0.0545</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0113, -0.0245, -0.0746</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0027, -0.0193, -0.0956</point>
 </muscleTendonPath>
 <optFiberLength>0.2010</optFiberLength>
@@ -3506,9 +3506,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>pelvis</linkName>
+<linkName>hip</linkName>
 <point>-0.0537, 0.1501, -0.034</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0081, 0.0423, -0.0729</point>
 </muscleTendonPath>
 <optFiberLength>0.1090</optFiberLength>
@@ -3531,9 +3531,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.005, 0.0234, -0.2111</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0101, 0.0406, -0.0725</point>
 </muscleTendonPath>
 <optFiberLength>0.1730</optFiberLength>
@@ -3556,15 +3556,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0140, 0.0188, -0.2099</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0356, 0.0009, -0.2769</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0370, -0.0125, -0.4048</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0274, -0.0131, -0.4255</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0559, -0.0146, 0.0218</point>
 </muscleTendonPath>
 <optFiberLength>0.0890</optFiberLength>
@@ -3587,13 +3587,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0290, 0.0310, -0.1924</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0335, 0.0285, -0.2084</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0343, 0.0055, -0.4030</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0554, 0.0018, 0.0253</point>
 </muscleTendonPath>
 <optFiberLength>0.0870</optFiberLength>
@@ -3616,15 +3616,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0048, 0.0349, -0.1854</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0269, 0.0409, -0.2591</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0361, 0.0205, -0.4030</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>0.0253, 0.0184, -0.4243</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0599, 0.0165, 0.0196</point>
 </muscleTendonPath>
 <optFiberLength>0.0840</optFiberLength>
@@ -3647,13 +3647,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0127, -0.0235, -0.3929</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0239, -0.0258, -0.4022</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0217, -0.0295, -0.0487</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.005, 0.0026, 0.0310</point>
 </muscleTendonPath>
 <optFiberLength>0.0450</optFiberLength>
@@ -3676,13 +3676,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0155, 0.0272, -0.3946</point>
-<linkName>left_upper_leg</linkName>
+<linkName>left-upper-leg</linkName>
 <point>-0.0254, 0.0274, -0.4018</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0242, 0.0235, -0.0481</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.005, 0.0026, 0.0310</point>
 </muscleTendonPath>
 <optFiberLength>0.0640</optFiberLength>
@@ -3705,9 +3705,9 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0024, 0.0071, -0.1533</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.005, 0.0026, 0.0310</point>
 </muscleTendonPath>
 <optFiberLength>0.0300</optFiberLength>
@@ -3730,13 +3730,13 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0094, 0.0019, -0.1348</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0144, -0.0229, -0.4051</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>-0.0071, -0.0207, 0.0214</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.0284, -0.0202, 0.0039</point>
 </muscleTendonPath>
 <optFiberLength>0.0310</optFiberLength>
@@ -3759,11 +3759,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0179, 0.0115, -0.1624</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0159, -0.0098, -0.4370</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.0678, -0.0226, 0.0058</point>
 </muscleTendonPath>
 <optFiberLength>0.0980</optFiberLength>
@@ -3786,15 +3786,15 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0070, 0.0325, -0.2646</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0198, 0.0283, -0.4184</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0144 , 0.0289, -0.4295</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>-0.0017, 0.0312, 0.0150</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.0189, 0.0422, 0.0099</point>
 </muscleTendonPath>
 <optFiberLength>0.0500</optFiberLength>
@@ -3817,19 +3817,19 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0005, 0.0362, -0.1568</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0207, 0.0286, -0.4205</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>-0.0162, 0.0289, -0.4319 </point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>-0.0050, 0.0300, 0.0110</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.0193, 0.0363, -0.0014</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.0364, 0.0197, -0.0050</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.0715, -0.0105, -0.0035</point>
 </muscleTendonPath>
 <optFiberLength>0.0490</optFiberLength>
@@ -3852,11 +3852,11 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0010, 0.0231, -0.2804</point>
-<linkName>left_lower_leg</linkName>
+<linkName>left-lower-leg</linkName>
 <point>0.0229, 0.0159, -0.4069</point>
-<linkName>left_foot</linkName>
+<linkName>left-foot</linkName>
 <point>0.0369, 0.0378, 0.0108</point>
 </muscleTendonPath>
 <optFiberLength>0.0790</optFiberLength>
