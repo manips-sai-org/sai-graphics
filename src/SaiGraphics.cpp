@@ -238,7 +238,7 @@ namespace
 		glfwSetWindowPos(window, windowPosX, windowPosY);
 		glfwShowWindow(window);
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1);
+		glfwSwapInterval(0);
 
 		return window;
 	}
@@ -815,7 +815,7 @@ namespace SaiGraphics
 				int windowPosY = (mode->height - windowH) / 2;
 				glfwSetWindowMonitor(_window, NULL, windowPosX, windowPosY, windowW, windowH, 0);
 			}
-			glfwSwapInterval(1);
+			glfwSwapInterval(0);
 		}
 
 		// swap camera if needed
