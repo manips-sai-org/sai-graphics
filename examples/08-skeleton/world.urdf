@@ -20,9 +20,8 @@
 	</light>
 
 	<camera name="camera">
-		<position xyz="2.0 0.0 1.0" />
-		<vertical xyz="0.0 0.0 1.0" />
-		<lookat xyz="0.0 0.0 -0.5" />
+		<position xyz="    2.14862 -0.00402684    0.716404" />
+		<lookat xyz="        1.2 -3.1225e-17         0.4" />
+		<vertical xyz="-0.316335 0.0123553  0.948567" />
 	</camera>
-
 </world>
