@@ -189,22 +189,24 @@ namespace
 		}
 	}
 
-	bool glewInitialize() {
+	bool glewInitialize()
+	{
 		bool ret = false;
-	#ifdef GLEW_VERSION
+#ifdef GLEW_VERSION
 		// Initialize glew library
-		if (glewInit() != GLEW_OK) {
+		if (glewInit() != GLEW_OK)
+		{
 			cout << "Failed to initialize glew library" << endl;
 			cout << glewGetErrorString(ret) << endl;
 			glfwTerminate();
 		}
-		else {
-		ret = true;
+		else
+		{
+			ret = true;
 		}
-	# endif
+#endif
 		return ret;
 	}
-
 
 	GLFWwindow *glfwInitialize(const std::string &window_name)
 	{
@@ -213,7 +215,8 @@ namespace
 		glfwSetErrorCallback(glfwError);
 
 		// initialize GLFW
-		if (!glfwInit()) throw std::runtime_error("glfw init error");
+		if (!glfwInit())
+			throw std::runtime_error("glfw init error");
 
 		// retrieve resolution of computer display and position window accordingly
 		GLFWmonitor *primary = glfwGetPrimaryMonitor();
@@ -229,14 +232,13 @@ namespace
 
 		// create window and make it current context
 		glfwWindowHint(GLFW_VISIBLE, 0);
-		
+
 		GLFWwindow *window =
 			glfwCreateWindow(windowW, windowH, window_name.c_str(), NULL, NULL);
 		glfwSetWindowPos(window, windowPosX, windowPosY);
 		glfwShowWindow(window);
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
-
 
 		return window;
 	}
@@ -888,7 +890,7 @@ namespace SaiGraphics
 		// update graphics. this automatically waits for the correct amount of time
 		glfwGetFramebufferSize(_window, &_window_width, &_window_height);
 		glfwSwapBuffers(_window);
-		glFinish();
+		// glFinish();
 
 		// poll for events
 		glfwPollEvents();
