@@ -325,6 +325,94 @@ namespace Parser
 		object->addChild(tmp_mmesh);
 	}
 
+	static void loadCollisiontoGenericObject(
+		cGenericObject *object,
+		const my_shared_ptr<SaiUrdfreader::Collision> &collision_ptr)
+	{
+		auto tmp_mmesh = new cMultiMesh();
+
+		// Name the mesh exactly as it appears in the URDF (e.g., "corals_ground_collision")
+		tmp_mmesh->m_name = collision_ptr->name;
+		if (tmp_mmesh->m_name.empty())
+		{
+			tmp_mmesh->m_name = object->m_name + "_collision";
+		}
+
+		auto tmp_mesh = new cMesh();
+		const auto geom_type = collision_ptr->geometry->type;
+
+		if (geom_type == SaiUrdfreader::Geometry::MESH)
+		{
+			const auto mesh_ptr = dynamic_cast<const SaiUrdfreader::Mesh *>(collision_ptr->geometry.get());
+			assert(mesh_ptr);
+
+			bool file_load_success = false;
+			std::string processed_filepath = SaiModel::ReplaceUrdfPathPrefix(mesh_ptr->filename);
+
+			if (processed_filepath.length() < 5)
+			{
+				cerr << "Error: File extension too short: " << processed_filepath << endl;
+				abort();
+			}
+
+			std::string extension = processed_filepath.substr(processed_filepath.length() - 4);
+			std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c)
+						   { return std::tolower(c); });
+
+			if (extension == ".stl")
+				file_load_success = cLoadFileSTL(tmp_mmesh, processed_filepath);
+			else if (extension == ".obj")
+				file_load_success = cLoadFileOBJ(tmp_mmesh, processed_filepath);
+			else if (extension == ".3ds")
+				file_load_success = cLoadFile3DS(tmp_mmesh, processed_filepath);
+
+			if (!file_load_success)
+			{
+				cerr << "Couldn't load collision mesh file: " << processed_filepath << endl;
+				abort();
+			}
+			tmp_mmesh->scaleXYZ(mesh_ptr->scale.x, mesh_ptr->scale.y, mesh_ptr->scale.z);
+		}
+		else if (geom_type == SaiUrdfreader::Geometry::BOX)
+		{
+			const auto box_ptr = dynamic_cast<const SaiUrdfreader::Box *>(collision_ptr->geometry.get());
+			assert(box_ptr);
+			cCreateBox(tmp_mesh, box_ptr->dim.x, box_ptr->dim.y, box_ptr->dim.z);
+			tmp_mmesh->addMesh(tmp_mesh);
+		}
+		else if (geom_type == SaiUrdfreader::Geometry::SPHERE)
+		{
+			const auto sphere_ptr = dynamic_cast<const SaiUrdfreader::Sphere *>(collision_ptr->geometry.get());
+			assert(sphere_ptr);
+			cCreateSphere(tmp_mesh, sphere_ptr->radius);
+			tmp_mmesh->addMesh(tmp_mesh);
+		}
+		else if (geom_type == SaiUrdfreader::Geometry::CYLINDER)
+		{
+			const auto cylinder_ptr = dynamic_cast<const SaiUrdfreader::Cylinder *>(collision_ptr->geometry.get());
+			assert(cylinder_ptr);
+			cCreateCylinder(tmp_mesh, cylinder_ptr->length, cylinder_ptr->radius, 32, 1, 1, true, true,
+							cVector3d(0, 0, -cylinder_ptr->length / 2));
+			tmp_mmesh->addMesh(tmp_mesh);
+		}
+
+		auto urdf_q = collision_ptr->origin.rotation;
+		Eigen::Quaterniond tmp_q(urdf_q.w, urdf_q.x, urdf_q.y, urdf_q.z);
+		cMatrix3d mesh_rotation;
+		mesh_rotation.copyfrom(tmp_q.toRotationMatrix());
+		cVector3d mesh_position(collision_ptr->origin.position.x,
+								collision_ptr->origin.position.y,
+								collision_ptr->origin.position.z);
+
+		tmp_mmesh->setLocalPos(mesh_position);
+		tmp_mmesh->setLocalRot(mesh_rotation);
+
+		// Hide by default
+		tmp_mmesh->setShowEnabled(false);
+
+		object->addChild(tmp_mmesh);
+	}
+
 	void UrdfToSaiGraphicsWorld(
 		const std::string &filename, chai3d::cWorld *world,
 		std::map<std::string, std::string> &robot_filenames,
@@ -533,6 +621,11 @@ namespace Parser
 			for (const auto visual_ptr : object_ptr->visual_array)
 			{
 				loadVisualtoGenericObject(object, visual_ptr);
+			}
+
+			for (const auto collision_ptr : object_ptr->collision_array)
+			{
+				loadCollisiontoGenericObject(object, collision_ptr);
 			}
 		}
 

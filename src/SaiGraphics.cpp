@@ -1603,22 +1603,19 @@ namespace SaiGraphics
 		}
 	}
 
-	void SaiGraphics::applyCollisionVisibilityRecursive(chai3d::cRobotLink *parent, bool show)
+	void SaiGraphics::applyCollisionVisibilityRecursive(chai3d::cGenericObject *parent, bool show)
 	{
 		for (unsigned int i = 0; i < parent->getNumChildren(); ++i)
 		{
 			cGenericObject *child = parent->getChild(i);
 
-			if (child->m_name == parent->m_name + "_collision")
+			if (child->m_name == parent->m_name + "_collision" ||
+				child->m_name.find("_collision") != std::string::npos)
 			{
 				child->setShowEnabled(show, false);
 			}
 
-			cRobotLink *child_link = dynamic_cast<cRobotLink *>(child);
-			if (child_link != NULL)
-			{
-				applyCollisionVisibilityRecursive(child_link, show);
-			}
+			applyCollisionVisibilityRecursive(child, show);
 		}
 	}
 
@@ -1648,16 +1645,7 @@ namespace SaiGraphics
 				return;
 			}
 
-			// Iteration over all the base's children
-			for (unsigned int i = 0; i < base->getNumChildren(); ++i)
-			{
-				cRobotLink *root_link = dynamic_cast<cRobotLink *>(base->getChild(i));
-
-				if (root_link != NULL)
-				{
-					applyCollisionVisibilityRecursive(root_link, show_collisionmesh);
-				}
-			}
+			applyCollisionVisibilityRecursive(base, show_collisionmesh);
 		}
 
 		// Case: Apply to a specific link

@@ -242,7 +242,7 @@ namespace SaiGraphics
 		 * @param parent Parent link to start recursion from.
 		 * @param show Flag whether to show collision
 		 */
-		void applyCollisionVisibilityRecursive(chai3d::cRobotLink *parent, bool show);
+		void applyCollisionVisibilityRecursive(chai3d::cGenericObject *parent, bool show);
 
 		/**
 		 * @brief Render collision mesh for a particular link or all links on a robot.
