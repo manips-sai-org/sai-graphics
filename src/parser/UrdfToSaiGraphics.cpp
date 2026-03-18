@@ -63,6 +63,60 @@ namespace Parser
 		return NULL;
 	}
 
+	static void applyTextureRepeatIfTiled(chai3d::cMultiMesh *mmesh)
+	{
+		// Safety check
+		if (mmesh == nullptr || mmesh->m_meshes == nullptr)
+		{
+			return;
+		}
+
+		// We use a small epsilon. Due to floating-point inaccuracies when exporting
+		// from Blender to OBJ, a UV coordinate meant to be exactly 1.0 might
+		// export as 1.00001. This prevents false positives on baked textures.
+		const double UV_THRESHOLD_UPPER = 1.001;
+		const double UV_THRESHOLD_LOWER = -0.001;
+
+		// Iterate through all child meshes inside the loaded multi-mesh
+		for (auto mesh : *(mmesh->m_meshes))
+		{
+			// Skip if the mesh lacks geometry, vertices, or a texture to modify
+			if (mesh == nullptr || mesh->m_texture == nullptr || mesh->m_vertices == nullptr)
+			{
+				continue;
+			}
+
+			bool requires_repeat = false;
+			int num_vertices = mesh->m_vertices->getNumElements();
+
+			// Scan the UV coordinates of the vertices
+			for (int i = 0; i < num_vertices; ++i)
+			{
+				// CHAI3D stores texture coordinates (U,V) in a cVector3d where Z is unused
+				chai3d::cVector3d tex_coord = mesh->m_vertices->getTexCoord(i);
+
+				// If any coordinate falls outside the standard 0.0 to 1.0 range, the texture is tiled
+				if (tex_coord.x() > UV_THRESHOLD_UPPER || tex_coord.x() < UV_THRESHOLD_LOWER ||
+					tex_coord.y() > UV_THRESHOLD_UPPER || tex_coord.y() < UV_THRESHOLD_LOWER)
+				{
+					requires_repeat = true;
+					break; // We found a tile; stop checking vertices to save CPU cycles
+				}
+			}
+
+			// Apply the wrap mode if tiling was detected
+			if (requires_repeat)
+			{
+				auto tex2d = std::dynamic_pointer_cast<chai3d::cTexture2d>(mesh->m_texture);
+				if (tex2d)
+				{
+					tex2d->setWrapModeS(GL_REPEAT);
+					tex2d->setWrapModeT(GL_REPEAT);
+				}
+			}
+		}
+	}
+
 	// internal helper function to load a SaiUrdfreader::Visual to a cGenericObject
 	// TODO: working dir default should be "", but this requires checking
 	// to make sure that the directory path has a trailing backslash
@@ -146,6 +200,8 @@ namespace Parser
 			{
 				tmp_mmesh->m_material->setColor(*color);
 			}
+
+			applyTextureRepeatIfTiled(tmp_mmesh);
 		}
 		else if (geom_type == SaiUrdfreader::Geometry::BOX)
 		{
