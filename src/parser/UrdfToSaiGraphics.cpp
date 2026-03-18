@@ -331,7 +331,6 @@ namespace Parser
 	{
 		auto tmp_mmesh = new cMultiMesh();
 
-		// Name the mesh exactly as it appears in the URDF (e.g., "corals_ground_collision")
 		tmp_mmesh->m_name = collision_ptr->name;
 		if (tmp_mmesh->m_name.empty())
 		{
@@ -362,7 +361,21 @@ namespace Parser
 			if (extension == ".stl")
 				file_load_success = cLoadFileSTL(tmp_mmesh, processed_filepath);
 			else if (extension == ".obj")
+			{
 				file_load_success = cLoadFileOBJ(tmp_mmesh, processed_filepath);
+				if (file_load_success)
+				{
+					for (int i = 0; i < tmp_mmesh->getNumMeshes(); i++)
+					{
+						cMesh *sub_mesh = tmp_mmesh->getMesh(i);
+						sub_mesh->setUseMaterial(true);
+						sub_mesh->setUseTexture(false);
+						sub_mesh->setUseVertexColors(false);
+						// sub_mesh->m_material->setTransparencyLevel(0.9f);
+						// sub_mesh->setUseTransparency(true);
+					}
+				}
+			}
 			else if (extension == ".3ds")
 				file_load_success = cLoadFile3DS(tmp_mmesh, processed_filepath);
 
