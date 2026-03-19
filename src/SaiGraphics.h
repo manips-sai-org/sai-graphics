@@ -122,6 +122,9 @@ namespace SaiGraphics
 										 const int width = 720,
 										 const int height = 480);
 
+		/// @brief Sets the current camera being rendered by name
+		void setCameraName(const std::string &camera_name);
+
 		/**
 		 * @brief remove all interactions widgets
 		 * after calling that function, right clicking on the window won't

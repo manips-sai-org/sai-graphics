@@ -790,6 +790,19 @@ namespace SaiGraphics
 		return image;
 	}
 
+	void SaiGraphics::setCameraName(const std::string &camera_name)
+	{
+		for (int i = 0; i < _camera_names.size(); ++i)
+		{
+			if (_camera_names[i] == camera_name)
+			{
+				_current_camera_index = i;
+				return;
+			}
+		}
+		std::cout << "WARNING: Camera [" << camera_name << "] not found in graphics world." << std::endl;
+	}
+
 	void SaiGraphics::renderGraphicsWorld()
 	{
 		// toggles fullscreen if needed
