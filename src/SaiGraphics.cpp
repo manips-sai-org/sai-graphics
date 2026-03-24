@@ -617,6 +617,82 @@ void SaiGraphics::addMuscleTendonPathDisplay(
 	}
 }
 
+void SaiGraphics::clearMuscleTendonPathDisplay() {
+	for (const auto& segment : _muscle_tendon_path_lines) {
+		if (segment.line != nullptr) {
+			_world->removeChild(segment.line);
+			delete segment.line;
+		}
+	}
+	_muscle_tendon_path_lines.clear();
+
+	for (const auto& waypoint_display : _muscle_tendon_waypoints) {
+		if (waypoint_display.sphere != nullptr) {
+			_world->removeChild(waypoint_display.sphere);
+			delete waypoint_display.sphere;
+		}
+	}
+	_muscle_tendon_waypoints.clear();
+}
+
+void SaiGraphics::reloadMuscleTendonPathDisplay(
+	const std::string& muscle_xml_path, const std::string& robot_name,
+	const double line_width) {
+	auto robot_it = _robot_models.find(robot_name);
+	if (robot_it == _robot_models.end()) {
+		throw std::invalid_argument(
+			"robot not found in SaiGraphics::reloadMuscleTendonPathDisplay");
+	}
+	const auto& robot_model = robot_it->second;
+	const auto muscle_system = SaiModel::parseMuscleXML(
+		muscle_xml_path, [&robot_model](const std::string& link_name) {
+			return robot_model->isLinkInRobot(link_name);
+		});
+
+	clearMuscleTendonPathDisplay();
+
+	for (const auto& muscle : muscle_system.muscles) {
+		const auto& waypoints = muscle.contractor.muscle_tendon_path;
+		const auto limb_color =
+			muscleLimbGroupColor(classifyMuscleLimbGroup(muscle));
+		for (size_t i = 0; i < waypoints.size(); ++i) {
+			const Eigen::Vector3d point = robot_model->positionInWorld(
+				waypoints[i].link_name, waypoints[i].point);
+			auto sphere_color =
+				(i == 0 || i + 1 == waypoints.size())
+					? muscleEndpointWaypointColor()
+					: muscleIntermediateWaypointColor();
+
+			auto* waypoint_sphere = new chai3d::cShapeSphere(0.004);
+			waypoint_sphere->setLocalPos(chai3d::cVector3d(point));
+			waypoint_sphere->m_material->setColor(sphere_color);
+
+			_world->addChild(waypoint_sphere);
+			_muscle_tendon_waypoints.push_back(
+				{robot_name, muscle.muscle_name, waypoints[i], waypoint_sphere});
+		}
+
+		for (size_t i = 0; i + 1 < waypoints.size(); ++i) {
+			const Eigen::Vector3d point_a =
+				robot_model->positionInWorld(waypoints[i].link_name,
+											 waypoints[i].point);
+			const Eigen::Vector3d point_b =
+				robot_model->positionInWorld(waypoints[i + 1].link_name,
+											 waypoints[i + 1].point);
+			auto* display_line = new chai3d::cShapeLine();
+			display_line->m_pointA = chai3d::cVector3d(point_a);
+			display_line->m_pointB = chai3d::cVector3d(point_b);
+			display_line->m_colorPointA = limb_color;
+			display_line->m_colorPointB = limb_color;
+			display_line->setLineWidth(line_width);
+
+			_world->addChild(display_line);
+			_muscle_tendon_path_lines.push_back(
+				{robot_name, waypoints[i], waypoints[i + 1], display_line});
+		}
+	}
+}
+
 void SaiGraphics::updateMuscleTendonPathDisplay() {
 	for (const auto& segment : _muscle_tendon_path_lines) {
 		auto robot_it = _robot_models.find(segment.robot_name);

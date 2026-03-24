@@ -912,13 +912,13 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0581, -0.0938, 0.0238</point>
+<point>-0.0581, -0.01, 0.0238</point>
 <linkName>pelvis</linkName>
-<point>-0.0822, -0.1238, -0.0391</point>
+<point>-0.07, -0.045, -0.0391</point>
 <linkName>right_upper_leg</linkName>
 <point>-0.0299, -0.0135, -0.1041</point>
 <linkName>right_upper_leg</linkName>
-<point>-0.0060, -0.0411, -0.1419</point>
+<point>-0.006, -0.0411, -0.1419</point>
 </muscleTendonPath>
 <optFiberLength>0.1440</optFiberLength>
 <slackTendonLength>0.1450</slackTendonLength>
@@ -941,11 +941,11 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0642, -0.1398, 0.0837</point>
+<point>-0.0642, -0.06, 0.0837</point>
 <linkName>pelvis</linkName>
-<point>-0.0669, -0.1749, 0.0141</point>
+<point>-0.04, -0.08, 0.0141</point>
 <linkName>right_upper_leg</linkName>
-<point>-0.0426, -0.0293, -0.0530</point>
+<point>-0.0426, -0.0293, -0.053</point>
 <linkName>right_upper_leg</linkName>
 <point>-0.0156, -0.0419, -0.1016</point>
 </muscleTendonPath>
@@ -970,13 +970,13 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0488, -0.1535, 0.1273</point>
+<point>-0.0488, -0.07, 0.14</point>
 <linkName>pelvis</linkName>
-<point>-0.0584, -0.1721, 0.0673</point>
+<point>-0.0488, -0.08, 0.0673</point>
 <linkName>right_upper_leg</linkName>
 <point>-0.0457, -0.0392, -0.0248</point>
 <linkName>right_upper_leg</linkName>
-<point>-0.0277, -0.0470, -0.0566</point>
+<point>-0.0277, -0.047, -0.0566</point>
 </muscleTendonPath>
 <optFiberLength>0.1420</optFiberLength>
 <slackTendonLength>0.1250</slackTendonLength>
@@ -3100,9 +3100,9 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0488, 0.1535, 0.1273</point>
+<point>-0.0488, 0.07, 0.14</point>
 <linkName>pelvis</linkName>
-<point>-0.0584, 0.1721, 0.0673</point>
+<point>-0.0488, 0.08, 0.0673</point>
 <linkName>left_upper_leg</linkName>
 <point>-0.0457, 0.0392, -0.0248</point>
 <linkName>left_upper_leg</linkName>
@@ -3129,9 +3129,9 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0642, 0.1398, 0.0837</point>
+<point>-0.0642, 0.06, 0.0837</point>
 <linkName>pelvis</linkName>
-<point>-0.0669, 0.1749, 0.0141</point>
+<point>-0.04, 0.08, 0.0141</point>
 <linkName>left_upper_leg</linkName>
 <point>-0.0426, 0.0293, -0.053</point>
 <linkName>left_upper_leg</linkName>
@@ -3158,9 +3158,9 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0581, 0.0938, 0.0238</point>
+<point>-0.0581, 0.01, 0.0238</point>
 <linkName>pelvis</linkName>
-<point>-0.0822, 0.1238, -0.0391</point>
+<point>-0.07, 0.045, -0.0391</point>
 <linkName>left_upper_leg</linkName>
 <point>-0.0299, 0.0135, -0.1041</point>
 <linkName>left_upper_leg</linkName>

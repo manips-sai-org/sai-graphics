@@ -328,6 +328,25 @@ public:
 									const double line_width = 2.0);
 
 	/**
+	 * @brief Remove all currently displayed muscle tendon path geometry.
+	 */
+	void clearMuscleTendonPathDisplay();
+
+	/**
+	 * @brief Reparse a muscle XML file and rebuild the displayed tendon path
+	 * geometry.
+	 *
+	 * @param muscle_xml_path path to the muscle XML file parsed with
+	 * SaiModel::parseMuscleXML
+	 * @param robot_name name of the robot to use for waypoint transforms. If
+	 * empty, the robot name declared in the muscle XML is used.
+	 * @param line_width width of the rendered line segments
+	 */
+	void reloadMuscleTendonPathDisplay(const std::string& muscle_xml_path,
+									   const std::string& robot_name = "",
+									   const double line_width = 2.0);
+
+	/**
 	 * @brief Update all displayed muscle tendon path segments from the current
 	 * robot state.
 	 */

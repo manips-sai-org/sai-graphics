@@ -2,6 +2,7 @@
 // that does not move
 
 #include <iostream>
+#include <filesystem>
 #include <string>
 #include <random>
 #include <SaiModel.h>
@@ -84,11 +85,23 @@ int main() {
     }
 
     graphics->addMuscleTendonPathDisplay(muscle_file, robot_name);
+    auto last_muscle_write_time = std::filesystem::last_write_time(muscle_file);
 
     auto start_time = std::chrono::steady_clock::now();
 
 	// while window is open:
 	while (graphics->isWindowOpen()) {
+        const auto current_muscle_write_time =
+            std::filesystem::last_write_time(muscle_file);
+        if (current_muscle_write_time != last_muscle_write_time) {
+            try {
+                graphics->reloadMuscleTendonPathDisplay(muscle_file, robot_name);
+                last_muscle_write_time = current_muscle_write_time;
+                cout << "Reloaded muscle tendon paths from " << muscle_file << endl;
+            } catch (const std::exception& e) {
+                cerr << "Failed to reload muscle tendon paths: " << e.what() << endl;
+            }
+        }
             
         // 2. Record the current time
         auto current_time = std::chrono::steady_clock::now();
