@@ -898,6 +898,17 @@ namespace SaiGraphics
 			}
 		}
 
+		if (consume_first_press(GLFW_KEY_C))
+		{
+			_show_collision_meshes = !_show_collision_meshes;
+
+			// Calls the global toggle function we discussed earlier
+			this->showCollisionMesh(_show_collision_meshes);
+
+			std::cout << "Collision meshes: "
+					  << (_show_collision_meshes ? "ON" : "OFF") << std::endl;
+		}
+
 		const std::string camera_name = _camera_names[_current_camera_index];
 
 		// update graphics. this automatically waits for the correct amount of time
@@ -1625,11 +1636,19 @@ namespace SaiGraphics
 			if (child->m_name == parent->m_name + "_collision" ||
 				child->m_name.find("_collision") != std::string::npos)
 			{
-				child->setShowEnabled(show, false);
+				child->setShowEnabled(show, true);
 			}
 
 			applyCollisionVisibilityRecursive(child, show);
 		}
+	}
+
+	void SaiGraphics::showCollisionMesh(bool show_collisionmesh)
+	{
+		// _world is the root of the Chai3D scene graph.
+		// This will crawl through every single robot, static object, and dynamic object
+		// in the scene and toggle anything with "_collision" in its name.
+		applyCollisionVisibilityRecursive(_world, show_collisionmesh);
 	}
 
 	void SaiGraphics::showCollisionMesh(bool show_collisionmesh,

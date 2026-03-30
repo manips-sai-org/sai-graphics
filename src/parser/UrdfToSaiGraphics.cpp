@@ -684,6 +684,10 @@ namespace Parser
 			{
 				loadVisualtoGenericObject(object, visual_ptr);
 			}
+			for (const auto collision_ptr : object_ptr->collision_array)
+			{
+				loadCollisiontoGenericObject(object, collision_ptr);
+			}
 		}
 	}
 

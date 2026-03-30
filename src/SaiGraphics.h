@@ -258,6 +258,12 @@ namespace SaiGraphics
 							   const std::string &link_name = "");
 
 		/**
+		 * @brief Render collision mesh for ALL robots and objects in the world.
+		 * @param show_collisionmesh Flag whether should show collision mesh or not.
+		 */
+		void showCollisionMesh(bool show_collisionmesh);
+
+		/**
 		 * @brief Set the Background color of the world
 		 *
 		 * @param red red component of the color between 0 and 1
@@ -469,6 +475,7 @@ namespace SaiGraphics
 
 	private:
 		bool _fullscreen = false;
+		bool _show_collision_meshes = false;
 		int _windowPosX, _windowPosY, _windowWidth, _windowHeight;
 
 		/**
