@@ -789,54 +789,8 @@
 </activatorNode>
 <contractorNode>
 <muscleTendonPath>
-<linkName>right_upper_leg</linkName>
-<point>-0.0309, -0.0518, -0.0047</point>
-</muscleTendonPath>
-<optFiberLength>0.0646</optFiberLength>
-<slackTendonLength>0.0530</slackTendonLength>
-<maxFiberVelocity>0.6460</maxFiberVelocity>
-<peakIsoForce>435.0</peakIsoForce>
-<pennationAngle>19.0</pennationAngle>
-<forceVelCurvature>0.25</forceVelCurvature>
-<passiveDamping>0.10</passiveDamping>
-</contractorNode>
-</muscleNode>
-
-<muscleNode>
-<muscleName>glut_med2_r</muscleName>
-<comments>Muscle data from Delp and Murray.</comments>
-<ID>25</ID>
-<activatorNode>
-<actTimeConstant>0.010</actTimeConstant>
-<deactTimeConstant>0.050</deactTimeConstant>
-</activatorNode>
-<contractorNode>
-<muscleTendonPath>
-<linkName>right_upper_leg</linkName>
-<point>-0.0258, -0.0527, -0.0058</point>
-</muscleTendonPath>
-<optFiberLength>0.0845</optFiberLength>
-<slackTendonLength>0.0530</slackTendonLength>
-<maxFiberVelocity>0.8450</maxFiberVelocity>
-<peakIsoForce>382.0</peakIsoForce>
-<pennationAngle>0.0</pennationAngle>
-<forceVelCurvature>0.25</forceVelCurvature>
-<passiveDamping>0.10</passiveDamping>
-</contractorNode>
-</muscleNode>
-
-<muscleNode>
-<muscleName>glut_med1_r</muscleName>
-<comments>Muscle data from Delp and Murray.</comments>
-<ID>26</ID>
-<activatorNode>
-<actTimeConstant>0.010</actTimeConstant>
-<deactTimeConstant>0.050</deactTimeConstant>
-</activatorNode>
-<contractorNode>
-<muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0516, -0.0700, 0.0766</point>
+<point>-0.0516, -0.07, 0.0766</point>
 <linkName>right_upper_leg</linkName>
 <point>-0.0309, -0.0518, -0.0047</point>
 </muscleTendonPath>
