@@ -19,6 +19,16 @@
 		<lookat xyz="0.0 0.0 0.5" />
 	</light>
 
+	<light name="light3" type="directional">
+		<position xyz="-2.0 0.0 2.0" />
+		<lookat xyz="0.0 0.0 0.5" />
+	</light>
+
+	<light name="light3" type="directional">
+		<position xyz="2.0 0.0 2.0" />
+		<lookat xyz="0.0 0.0 0.5" />
+	</light>
+
 	<camera name="camera">
 		<position xyz="    2.14862 -0.00402684    0.716404" />
 		<lookat xyz="        1.2 -3.1225e-17         0.4" />

@@ -421,10 +421,13 @@ private:
 	void initializeMuscleTendonHoverLabels();
 
 	void updateMuscleTendonHoverLabel(const std::string& camera_name,
-									  const double cursorx,
-									  const double cursory,
-									  const int window_width_screen,
-									  const int window_height_screen);
+										  const double cursorx,
+										  const double cursory,
+										  const int window_width_screen,
+										  const int window_height_screen);
+
+	void updateMuscleTendonPathHighlight(const std::string& robot_name,
+										 const std::string& muscle_name);
 
 	/**
 	 * @brief initialize the glfw window with the given window name
@@ -521,8 +524,11 @@ private:
 
 	struct MuscleTendonPathSegmentDisplay {
 		std::string robot_name;
+		std::string muscle_name;
 		SaiModel::Waypoint point_a_waypoint;
 		SaiModel::Waypoint point_b_waypoint;
+		chai3d::cColorf color;
+		double line_width;
 		chai3d::cShapeLine* line;
 	};
 

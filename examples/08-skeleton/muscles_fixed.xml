@@ -471,7 +471,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0537, -0.1501, -0.0340</point>
+<point>-0.0537, -0.065, -0.0340</point>
 <linkName>right_lower_leg</linkName>
 <point>-0.0081, -0.0423, -0.0729</point>
 </muscleTendonPath>
@@ -496,7 +496,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0530, -0.1438, -0.0382</point>
+<point>-0.0530, -0.06, -0.0382</point>
 <linkName>right_lower_leg</linkName>
 <point>-0.0314, 0.0146, -0.0545</point>
 <linkName>right_lower_leg</linkName>
@@ -525,7 +525,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0485, -0.1530, -0.0354</point>
+<point>-0.0485, -0.070, -0.0354</point>
 <linkName>right_lower_leg</linkName>
 <point>-0.0243, 0.0194, -0.0536</point>
 </muscleTendonPath>
@@ -550,7 +550,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>0.0144, -0.0914, -0.0377</point>
+<point>0.0144, -0.02, -0.0377</point>
 <linkName>right_lower_leg</linkName>
 <point>-0.0154, 0.0358, -0.0475</point>
 <linkName>right_lower_leg</linkName>
@@ -634,8 +634,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<!-- <point>0.0554, -0.2077, 0.0648</point> -->
-<point>0.0554, -0.13, 0.0648</point>
+<point>0.0554, -0.125, 0.0648</point>
 <linkName>right_upper_leg</linkName>
 <point>-0.0030, 0.0421, -0.3568</point>
 <linkName>right_lower_leg</linkName>
@@ -741,7 +740,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>0.0120, -0.0999, -0.0254</point>
+<point>0.0120, -0.02, -0.0254</point>
 <linkName>right_upper_leg</linkName>
 <point>0.0009, -0.0294, -0.1196</point>
 </muscleTendonPath>
@@ -766,7 +765,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>0.0391, -0.1004, -0.0175</point>
+<point>0.0391, -0.02, -0.0175</point>
 <linkName>right_upper_leg</linkName>
 <point>0.0050, -0.0234, -0.2111</point>
 </muscleTendonPath>
@@ -1005,7 +1004,7 @@
 <linkName>chest</linkName>
 <point>-0.089, 0.0825, 0.214</point>
 <linkName>pelvis</linkName>
-<point>-0.0525, 0.1079, 0.0899</point>
+<point>-0.0525, 0.06, 0.14</point>
 </muscleTendonPath>
 <optFiberLength>0.1417</optFiberLength>
 <slackTendonLength>0.2176</slackTendonLength>
@@ -1034,7 +1033,7 @@
 <linkName>chest</linkName>
 <point>-0.0911, 0.0421, 0.2418</point>
 <linkName>pelvis</linkName>
-<point>-0.0579, 0.0979, 0.0909</point>
+<point>-0.0579, 0.065, 0.13</point>
 </muscleTendonPath>
 <optFiberLength>0.1168</optFiberLength>
 <slackTendonLength>0.2742</slackTendonLength>
@@ -1063,7 +1062,7 @@
 <linkName>chest</linkName>
 <point>0.1172, 0.0402, 0.2299</point>
 <linkName>pelvis</linkName>
-<point>0.0438, 0.0989, -0.0051</point>
+<point>0.0438, 0.01, -0.0051</point>
 </muscleTendonPath>
 <optFiberLength>0.2798</optFiberLength>
 <slackTendonLength>0.1115</slackTendonLength>
@@ -1088,7 +1087,7 @@
 <linkName>chest</linkName>
 <point>-0.0371, 0.0316, 0.1476</point>
 <linkName>pelvis</linkName>
-<point>-0.0292, 0.1424, 0.1463</point>
+<point>-0.0292, 0.06, 0.1463</point>
 </muscleTendonPath>
 <optFiberLength>0.0825</optFiberLength>
 <slackTendonLength>0.0345</slackTendonLength>
@@ -1113,7 +1112,7 @@
 <linkName>chest</linkName>
 <point>-0.0243, 0.0303, 0.1154</point>
 <linkName>pelvis</linkName>
-<point>-0.0402, 0.1373, 0.1335</point>
+<point>-0.0402, 0.053, 0.1335</point>
 </muscleTendonPath>
 <optFiberLength>0.0562</optFiberLength>
 <slackTendonLength>0.0373</slackTendonLength>
@@ -1143,7 +1142,7 @@
 <linkName>chest</linkName>
 <point>-0.0890, -0.0825, 0.2140</point>
 <linkName>pelvis</linkName>
-<point>-0.0525, -0.1079, 0.0899</point>
+<point>-0.0525, -0.06, 0.14</point>
 </muscleTendonPath>
 <optFiberLength>0.1417</optFiberLength>
 <slackTendonLength>0.2176</slackTendonLength>
@@ -1172,7 +1171,7 @@
 <linkName>chest</linkName>
 <point>-0.0911, -0.0421, 0.2418</point>
 <linkName>pelvis</linkName>
-<point>-0.0579, -0.0979, 0.0909</point>
+<point>-0.0579, -0.065, 0.13</point>
 </muscleTendonPath>
 <optFiberLength>0.1168</optFiberLength>
 <slackTendonLength>0.2742</slackTendonLength>
@@ -1201,7 +1200,7 @@
 <linkName>chest</linkName>
 <point>0.1172, -0.0402, 0.2299</point>
 <linkName>pelvis</linkName>
-<point>0.0438, -0.0989, -0.0051</point>
+<point>0.0438, -0.01, -0.0051</point>
 </muscleTendonPath>
 <optFiberLength>0.2798</optFiberLength>
 <slackTendonLength>0.1115</slackTendonLength>
@@ -1226,7 +1225,7 @@
 <linkName>chest</linkName>
 <point>-0.0371, -0.0316, 0.1476</point>
 <linkName>pelvis</linkName>
-<point>-0.0292, -0.1424, 0.1463</point>
+<point>-0.0292, -0.06, 0.1463</point>
 </muscleTendonPath>
 <optFiberLength>0.0825</optFiberLength>
 <slackTendonLength>0.0345</slackTendonLength>
@@ -1251,7 +1250,7 @@
 <linkName>chest</linkName>
 <point>-0.0243, -0.0303, 0.1154</point>
 <linkName>pelvis</linkName>
-<point>-0.0402, -0.1373, 0.1335</point>
+<point>-0.0402, -0.053, 0.1335</point>
 </muscleTendonPath>
 <optFiberLength>0.0562</optFiberLength>
 <slackTendonLength>0.0373</slackTendonLength>
@@ -3265,7 +3264,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>0.0391, 0.1004, -0.0175</point>
+<point>0.0391, 0.02, -0.0175</point>
 <linkName>left_upper_leg</linkName>
 <point>0.0050, 0.0234, -0.2111</point>
 </muscleTendonPath>
@@ -3290,7 +3289,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>0.0120, 0.0999, -0.0254</point>
+<point>0.0120, 0.02, -0.0254</point>
 <linkName>left_upper_leg</linkName>
 <point>0.0009, 0.0294, -0.1196</point>
 </muscleTendonPath>
@@ -3391,7 +3390,7 @@
 <muscleTendonPath>
 <linkName>pelvis</linkName>
 <!-- <point>0.0554, 0.2077, 0.0648</point> -->
-<point>0.0554, 0.13, 0.0648</point>
+<point>0.0554, 0.125, 0.0648</point>
 <linkName>left_upper_leg</linkName>
 <point>-0.0030, -0.0421, -0.3568</point>
 <linkName>left_lower_leg</linkName>
@@ -3480,7 +3479,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>0.0144, 0.0914, -0.0377</point>
+<point>0.0144, 0.02, -0.0377</point>
 <linkName>left_lower_leg</linkName>
 <point>-0.0154, -0.0358, -0.0475</point>
 <linkName>left_lower_leg</linkName>
@@ -3507,7 +3506,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0485, 0.153, -0.0354</point>
+<point>-0.0485, 0.070, -0.0354</point>
 <linkName>left_lower_leg</linkName>
 <point>-0.0243, -0.0194, -0.0536</point>
 </muscleTendonPath>
@@ -3532,7 +3531,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.053, 0.1438, -0.0382</point>
+<point>-0.0530, 0.06, -0.0382</point>
 <linkName>left_lower_leg</linkName>
 <point>-0.0314, -0.0146, -0.0545</point>
 <linkName>left_lower_leg</linkName>
@@ -3561,7 +3560,7 @@
 <contractorNode>
 <muscleTendonPath>
 <linkName>pelvis</linkName>
-<point>-0.0537, 0.1501, -0.034</point>
+<point>-0.0537, 0.065, -0.034</point>
 <linkName>left_lower_leg</linkName>
 <point>-0.0081, 0.0423, -0.0729</point>
 </muscleTendonPath>
@@ -3918,6 +3917,118 @@
 <maxFiberVelocity>0.7900</maxFiberVelocity>
 <peakIsoForce>90.0</peakIsoForce>
 <pennationAngle>13.0</pennationAngle>
+<forceVelCurvature>0.25</forceVelCurvature>
+<passiveDamping>0.10</passiveDamping>
+</contractorNode>
+</muscleNode>
+
+<muscleNode>
+<muscleName>ercspn_l</muscleName>
+<comments>Muscle data from Delp and Murray.</comments>
+<ID>136</ID>
+<activatorNode>
+<actTimeConstant>0.010</actTimeConstant>
+<deactTimeConstant>0.050</deactTimeConstant>
+</activatorNode>
+<contractorNode>
+<muscleTendonPath>
+<linkName>chest</linkName>
+<point>-0.0371, 0.026, 0.1476</point>
+<linkName>pelvis</linkName>
+<point>-0.0292, 0.05, 0.1</point>
+</muscleTendonPath>
+<optFiberLength>0.0825</optFiberLength>
+<slackTendonLength>0.0345</slackTendonLength>
+<maxFiberVelocity>0.8250</maxFiberVelocity>
+<peakIsoForce>69.57</peakIsoForce>
+<pennationAngle>7.4</pennationAngle>
+<forceVelCurvature>0.25</forceVelCurvature>
+<passiveDamping>0.10</passiveDamping>
+</contractorNode>
+</muscleNode>
+
+<muscleNode>
+<muscleName>ercspn_r</muscleName>
+<comments>Muscle data from Delp and Murray.</comments>
+<ID>137</ID>
+<activatorNode>
+<actTimeConstant>0.010</actTimeConstant>
+<deactTimeConstant>0.050</deactTimeConstant>
+</activatorNode>
+<contractorNode>
+<muscleTendonPath>
+<linkName>chest</linkName>
+<point>-0.0371, -0.026, 0.1476</point>
+<linkName>pelvis</linkName>
+<point>-0.0292, -0.05, 0.1</point>
+</muscleTendonPath>
+<optFiberLength>0.0825</optFiberLength>
+<slackTendonLength>0.0345</slackTendonLength>
+<maxFiberVelocity>0.8250</maxFiberVelocity>
+<peakIsoForce>69.57</peakIsoForce>
+<pennationAngle>7.4</pennationAngle>
+<forceVelCurvature>0.25</forceVelCurvature>
+<passiveDamping>0.10</passiveDamping>
+</contractorNode>
+</muscleNode>
+
+<muscleNode>
+<muscleName>iliacus_l</muscleName>
+<comments>Muscle data from Delp and Murray.</comments>
+<ID>138</ID>
+<activatorNode>
+<actTimeConstant>0.010</actTimeConstant>
+<deactTimeConstant>0.050</deactTimeConstant>
+</activatorNode>
+<contractorNode>
+<muscleTendonPath>
+<linkName>pelvis</linkName>
+<point>0, 0.075, 0.08</point>
+<linkName>pelvis</linkName>
+<point>0.03, 0.075, 0.02</point>
+<linkName>left_upper_leg</linkName>
+<point>0.03, -0.01, -0.01</point>
+<linkName>left_upper_leg</linkName>
+<point>0.0, -0.01, -0.05</point>
+<linkName>left_upper_leg</linkName>
+<point>-0.015, 0.01, -0.05</point>
+</muscleTendonPath>
+<optFiberLength>0.0825</optFiberLength>
+<slackTendonLength>0.0345</slackTendonLength>
+<maxFiberVelocity>0.8250</maxFiberVelocity>
+<peakIsoForce>69.57</peakIsoForce>
+<pennationAngle>7.4</pennationAngle>
+<forceVelCurvature>0.25</forceVelCurvature>
+<passiveDamping>0.10</passiveDamping>
+</contractorNode>
+</muscleNode>
+
+<muscleNode>
+<muscleName>iliacus_r</muscleName>
+<comments>Muscle data from Delp and Murray.</comments>
+<ID>138</ID>
+<activatorNode>
+<actTimeConstant>0.010</actTimeConstant>
+<deactTimeConstant>0.050</deactTimeConstant>
+</activatorNode>
+<contractorNode>
+<muscleTendonPath>
+<linkName>pelvis</linkName>
+<point>0, -0.075, 0.08</point>
+<linkName>pelvis</linkName>
+<point>0.03, -0.075, 0.02</point>
+<linkName>right_upper_leg</linkName>
+<point>0.03, 0.01, -0.01</point>
+<linkName>right_upper_leg</linkName>
+<point>0.0, 0.01, -0.05</point>
+<linkName>right_upper_leg</linkName>
+<point>-0.015, -0.01, -0.05</point>
+</muscleTendonPath>
+<optFiberLength>0.0825</optFiberLength>
+<slackTendonLength>0.0345</slackTendonLength>
+<maxFiberVelocity>0.8250</maxFiberVelocity>
+<peakIsoForce>69.57</peakIsoForce>
+<pennationAngle>7.4</pennationAngle>
 <forceVelCurvature>0.25</forceVelCurvature>
 <passiveDamping>0.10</passiveDamping>
 </contractorNode>
