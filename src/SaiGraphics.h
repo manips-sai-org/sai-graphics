@@ -277,6 +277,7 @@ namespace SaiGraphics
 		}
 
 		void setBackgroundImage(const std::string &image_path, const std::string &camera_name = "default_camera");
+		void setFrontgroundImage(const std::string &image_path, const std::string &camera_name = "default_camera");
 
 		/// @brief Returns the current camera name.
 		std::string getCurrentCameraName() const
@@ -472,6 +473,9 @@ namespace SaiGraphics
 
 		std::vector<unsigned char> getFrameBuffer(const std::string &camera_name,
 												  int width, int height);
+
+		//! Adds 2D text to the specified camera's front layer and returns a pointer to the label
+		chai3d::cLabel *addText(const std::string &camera_name, const std::string &text, double x, double y);
 
 	private:
 		bool _fullscreen = false;

@@ -1953,6 +1953,40 @@ namespace SaiGraphics
 		}
 	}
 
+	void SaiGraphics::setFrontgroundImage(const std::string &image_path, const std::string &camera_name)
+	{
+		auto applyToCamera = [&](const std::string &name)
+		{
+			chai3d::cCamera *camera = getCamera(name);
+			if (camera)
+			{
+				chai3d::cBackground *background = new chai3d::cBackground();
+				camera->m_frontLayer->addChild(background);
+
+				if (!background->loadFromFile(image_path))
+				{
+					std::cout << "Error - Image failed to load correctly for camera: " << name << std::endl;
+				}
+			}
+			else
+			{
+				std::cerr << "Warning: Camera '" << name << "' not found." << std::endl;
+			}
+		};
+
+		if (camera_name == "default_camera")
+		{
+			for (const std::string &name : _camera_names)
+			{
+				applyToCamera(name);
+			}
+		}
+		else
+		{
+			applyToCamera(camera_name);
+		}
+	}
+
 	chai3d::cMultiMesh *SaiGraphics::createMultiMesh(const std::string &mesh_file_path,
 													 const std::string &object_name,
 													 const Eigen::Affine3d &object_pose,
@@ -2128,6 +2162,35 @@ namespace SaiGraphics
 		unsigned int size = image->getSizeInBytes();
 
 		return std::vector<unsigned char>(data, data + size);
+	}
+
+	chai3d::cLabel *SaiGraphics::addText(const std::string &camera_name, const std::string &text, double x, double y)
+	{
+		// Retrieve the target camera from the graphics world
+		chai3d::cCamera *camera = getCamera(camera_name);
+
+		// Match the warning convention used throughout SaiGraphics.cpp
+		if (camera == nullptr)
+		{
+			std::cerr << "WARNING: Camera [" << camera_name << "] not found in graphics world. Cannot add text." << std::endl;
+			return nullptr;
+		}
+
+		// Create a font using CHAI3D's built-in macro
+		chai3d::cFontPtr font = chai3d::NEW_CFONTCALIBRI20();
+
+		// Create a new label with the specified font
+		chai3d::cLabel *label = new chai3d::cLabel(font);
+
+		// Add the label to the camera's front layer so it acts as a 2D UI overlay
+		camera->m_frontLayer->addChild(label);
+
+		// Assign text color, value, and screen position
+		label->m_fontColor.setBlack();
+		label->setText(text);
+		label->setLocalPos(x, y);
+
+		return label;
 	}
 
 } // namespace SaiGraphics
