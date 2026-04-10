@@ -1987,6 +1987,44 @@ namespace SaiGraphics
 		}
 	}
 
+	void SaiGraphics::removeFrontgroundImage(const std::string &camera_name)
+	{
+		auto removeFromCamera = [&](const std::string &name)
+		{
+			chai3d::cCamera *camera = getCamera(name);
+			if (!camera)
+			{
+				std::cerr << "Warning: Camera '" << name << "' not found." << std::endl;
+				return;
+			}
+
+			auto frontLayer = camera->m_frontLayer;
+
+			for (int i = frontLayer->getNumChildren() - 1; i >= 0; --i)
+			{
+				chai3d::cGenericObject *obj = frontLayer->getChild(i);
+
+				if (dynamic_cast<chai3d::cBackground *>(obj))
+				{
+					frontLayer->removeChild(obj);
+					delete obj;
+				}
+			}
+		};
+
+		if (camera_name == "default_camera")
+		{
+			for (const std::string &name : _camera_names)
+			{
+				removeFromCamera(name);
+			}
+		}
+		else
+		{
+			removeFromCamera(camera_name);
+		}
+	}
+
 	chai3d::cMultiMesh *SaiGraphics::createMultiMesh(const std::string &mesh_file_path,
 													 const std::string &object_name,
 													 const Eigen::Affine3d &object_pose,

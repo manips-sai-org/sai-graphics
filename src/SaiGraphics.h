@@ -278,6 +278,7 @@ namespace SaiGraphics
 
 		void setBackgroundImage(const std::string &image_path, const std::string &camera_name = "default_camera");
 		void setFrontgroundImage(const std::string &image_path, const std::string &camera_name = "default_camera");
+		void removeFrontgroundImage(const std::string &camera_name = "default_camera");
 
 		/// @brief Returns the current camera name.
 		std::string getCurrentCameraName() const
