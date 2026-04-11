@@ -1960,12 +1960,16 @@ namespace SaiGraphics
 			chai3d::cCamera *camera = getCamera(name);
 			if (camera)
 			{
+				// 1. Create the background
 				chai3d::cBackground *background = new chai3d::cBackground();
 				camera->m_frontLayer->addChild(background);
 
+				// 2. IMPORTANT: Enable transparency before or after loading
+				background->setUseTransparency(true);
+
 				if (!background->loadFromFile(image_path))
 				{
-					std::cout << "Error - Image failed to load correctly for camera: " << name << std::endl;
+					std::cout << "Error - Image failed to load correctly: " << name << std::endl;
 				}
 			}
 			else
@@ -1977,9 +1981,7 @@ namespace SaiGraphics
 		if (camera_name == "default_camera")
 		{
 			for (const std::string &name : _camera_names)
-			{
 				applyToCamera(name);
-			}
 		}
 		else
 		{
