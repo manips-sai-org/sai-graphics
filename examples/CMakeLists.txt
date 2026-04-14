@@ -5,6 +5,7 @@ set(SAI-GRAPHICS_EXAMPLES_LIBRARIES
 set(EXAMPLES_FOLDER ${CMAKE_CURRENT_SOURCE_DIR})
 add_definitions(-DEXAMPLES_FOLDER="${EXAMPLES_FOLDER}")
 
+add_subdirectory(00-joint_slider)
 add_subdirectory(01-parse_world_and_robot)
 add_subdirectory(02-update_rendering)
 add_subdirectory(03-multiple_cameras)

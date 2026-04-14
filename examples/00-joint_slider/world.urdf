@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<world name="demo_world" gravity="0.0 0.0 -9.81">
+
+	<robot name="RBot">
+		<!-- model node is required -->
+		<model dir="${SAI_MODEL_URDF_FOLDER}/simple_models" path="simple_pendulum.urdf" name="simple_pendulum" />
+		<!-- origin node is optional -->
+		<origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+	</robot>
+
+	<light name="light1" type="directional">
+		<position xyz="2.0 -2.0 2.0" />
+		<lookat xyz="0.0 0.0 0.5" />
+	</light>
+
+	<light name="light2" type="directional">
+		<position xyz="2.0 2.0 2.0" />
+		<lookat xyz="0.0 0.0 0.5" />
+	</light>
+
+	<camera name="camera">
+		<position xyz="2.0 0.0 1.0" />
+		<vertical xyz="0.0 0.0 1.0" />
+		<lookat xyz="0.0 0.0 -0.5" />
+	</camera>
+
+</world>

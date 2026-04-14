@@ -7,9 +7,15 @@
 
 #include "SaiGraphics.h"
 
+#include <algorithm>
+#include <cmath>
 #include <deque>
+#include <iomanip>
 #include <iostream>
+#include <limits>
+#include <sstream>
 #include <unordered_map>
+#include <unordered_set>
 
 #ifdef MACOSX
 #include <filesystem>
@@ -239,12 +245,117 @@ chai3d::cColorf muscleTendonHighlightColor() {
 double highlightedMuscleTendonLineWidth(const double base_line_width) {
 	return std::max(4.0, base_line_width * 2.0);
 }
+
+bool projectWorldPointToViewport(chai3d::cCamera* camera,
+								 const Eigen::Vector3d& world_point,
+								 const int viewport_width,
+								 const int viewport_height, double& out_x,
+								 double& out_y, double& out_depth) {
+	if (camera == nullptr || viewport_width <= 0 || viewport_height <= 0) {
+		return false;
+	}
+
+	const double field_view_angle_deg = camera->getFieldViewAngleDeg();
+	if (std::abs(field_view_angle_deg) < 1e-6) {
+		return false;
+	}
+
+	const Eigen::Vector3d camera_delta =
+		world_point - camera->getGlobalPos().eigen();
+	const Eigen::Vector3d point_in_camera =
+		camera->getGlobalRot().eigen().transpose() * camera_delta;
+
+	// In CHAI3D camera coordinates, points in front of the camera have
+	// negative x values.
+	if (point_in_camera.x() >= -camera->getNearClippingPlane()) {
+		return false;
+	}
+
+	const double dist_cam =
+		(viewport_height / 2.0) / cTanDeg(field_view_angle_deg / 2.0);
+	out_x =
+		viewport_width / 2.0 - dist_cam * point_in_camera.y() / point_in_camera.x();
+	out_y = viewport_height / 2.0 +
+			dist_cam * point_in_camera.z() / point_in_camera.x();
+	out_depth = -point_in_camera.x();
+	return true;
+}
+
+double distanceToScreenSegment(const Eigen::Vector2d& point,
+							   const Eigen::Vector2d& segment_start,
+							   const Eigen::Vector2d& segment_end) {
+	const Eigen::Vector2d segment = segment_end - segment_start;
+	const double segment_length_squared = segment.squaredNorm();
+	if (segment_length_squared <= 1e-9) {
+		return (point - segment_start).norm();
+	}
+
+	const double projection =
+		std::clamp((point - segment_start).dot(segment) / segment_length_squared,
+				   0.0, 1.0);
+	const Eigen::Vector2d closest_point =
+		segment_start + projection * segment;
+	return (point - closest_point).norm();
+}
+
+constexpr int kJointSliderMinVisibleRows = 8;
+constexpr int kJointSliderHeaderHeightPx = 32;
+constexpr int kJointSliderWindowWidthPx = 360;
+constexpr int kJointSliderLeftPx = 18;
+constexpr int kJointSliderTopPx = 18;
+constexpr int kJointSliderBottomPx = 18;
+constexpr int kJointSliderTrackLeftPx = 188;
+constexpr int kJointSliderTrackRightPx = 332;
+constexpr double kJointSliderDragThresholdPx = 12.0;
+constexpr double kJointSliderMinRowHeightPx = 20.0;
+constexpr double kJointSliderMaxRowHeightPx = 46.0;
+
+double finiteSliderBound(const double value, const double fallback) {
+	if (std::isfinite(value) && std::abs(value) < 1e6) {
+		return value;
+	}
+	return fallback;
+}
+
+std::pair<double, double> sliderBoundsForJoint(
+	const Eigen::VectorXd& q, const SaiModel::JointLimit& limit) {
+	double lower = finiteSliderBound(limit.position_lower, -M_PI);
+	double upper = finiteSliderBound(limit.position_upper, M_PI);
+	if (upper < lower) {
+		std::swap(lower, upper);
+	}
+	if (std::abs(upper - lower) < 1e-9) {
+		const double center =
+			(limit.joint_index >= 0 && limit.joint_index < q.size())
+				? q(limit.joint_index)
+				: 0.0;
+		lower = center - 1.0;
+		upper = center + 1.0;
+	}
+	return {lower, upper};
+}
+
+double clampSliderValue(const double value, const double lower,
+						  const double upper) {
+	return std::clamp(value, std::min(lower, upper), std::max(lower, upper));
+}
+
+std::string formatSliderValue(const double value) {
+	std::ostringstream stream;
+	stream << std::fixed << std::setprecision(3) << value;
+	return stream.str();
+}
 }  // namespace
 
 namespace SaiGraphics {
 
 SaiGraphics::SaiGraphics(const std::string& path_to_world_file,
 						   const std::string& window_name, bool verbose) {
+	_joint_slider_dropdown_enabled = false;
+	_joint_slider_dropdown_expanded = false;
+	_joint_slider_scroll_index = 0;
+	_active_joint_slider_index = -1;
+	_joint_slider_interaction_occurring = false;
 	// initialize a chai world
 	initializeWorld(path_to_world_file, verbose);
 #ifdef MACOSX
@@ -281,6 +392,8 @@ void SaiGraphics::initializeWorld(const std::string& path_to_world_file,
 		_camera_names.push_back(it.first);
 	}
 	initializeMuscleTendonHoverLabels();
+	initializeJointFrameHoverLabels();
+	initializeJointSliderDropdowns();
 	for (auto robot_filename : _robot_filenames) {
 		// get robot base object in chai world
 		cRobotBase* base = NULL;
@@ -299,8 +412,16 @@ void SaiGraphics::initializeWorld(const std::string& path_to_world_file,
 		_robot_models[robot_filename.first] =
 			std::make_shared<SaiModel::SaiModel>(robot_filename.second);
 		_robot_models[robot_filename.first]->setTRobotBase(T_robot_base);
+		_joint_slider_values[robot_filename.first] =
+			_robot_models[robot_filename.first]->q();  
+		_joint_slider_default_values[robot_filename.first] =
+			_robot_models[robot_filename.first]->q() * 0; // hard-code to zero
+		_joint_slider_override_active[robot_filename.first] = false;
 		updateRobotGraphics(robot_filename.first,
 							_robot_models[robot_filename.first]->q());
+	}
+	if (_joint_slider_robot_name.empty() && !_robot_filenames.empty()) {
+		_joint_slider_robot_name = _robot_filenames.begin()->first;
 	}
 	for (auto object_pose : _dyn_objects_pose) {
 		_object_velocities[object_pose.first] =
@@ -323,6 +444,18 @@ void SaiGraphics::clearWorld() {
 	_muscle_tendon_waypoints.clear();
 	_muscle_tendon_hover_labels.clear();
 	_muscle_tendon_hover_font.reset();
+	_joint_frame_hover_labels.clear();
+	_joint_frame_hover_font.reset();
+	_joint_frame_displays.clear();
+	_joint_slider_dropdowns.clear();
+	_joint_slider_font.reset();
+	_joint_slider_values.clear();
+	_joint_slider_default_values.clear();
+	_joint_slider_override_active.clear();
+	_joint_slider_robot_name.clear();
+	_joint_slider_scroll_index = 0;
+	_active_joint_slider_index = -1;
+	_joint_slider_interaction_occurring = false;
 	_ui_force_widgets.clear();
 	_camera_link_attachments.clear();
 }
@@ -337,6 +470,156 @@ void SaiGraphics::initializeMuscleTendonHoverLabels() {
 		getCamera(camera_name)->m_frontLayer->addChild(hover_label);
 		_muscle_tendon_hover_labels[camera_name] = hover_label;
 	}
+}
+
+void SaiGraphics::initializeJointFrameHoverLabels() {
+	_joint_frame_hover_font = NEW_CFONTCALIBRI72();
+	for (const auto& camera_name : _camera_names) {
+		auto* hover_label = new chai3d::cLabel(_joint_frame_hover_font);
+		hover_label->setFontScale(1.0);
+		hover_label->m_fontColor.setWhite();
+		hover_label->setShowEnabled(false);
+		getCamera(camera_name)->m_frontLayer->addChild(hover_label);
+		_joint_frame_hover_labels[camera_name] = hover_label;
+	}
+}
+
+void SaiGraphics::initializeJointSliderDropdowns() {
+	_joint_slider_font = NEW_CFONTCALIBRI72();
+	for (const auto& camera_name : _camera_names) {
+		JointSliderDropdownVisual dropdown = {};
+		auto* front_layer = getCamera(camera_name)->m_frontLayer;
+
+		dropdown.title_label = new chai3d::cLabel(_joint_slider_font);
+		dropdown.title_label->setFontScale(0.9);
+		dropdown.title_label->m_fontColor.setWhite();
+		front_layer->addChild(dropdown.title_label);
+
+		dropdown.state_label = new chai3d::cLabel(_joint_slider_font);
+		dropdown.state_label->setFontScale(0.8);
+		dropdown.state_label->m_fontColor.setGrayGainsboro();
+		front_layer->addChild(dropdown.state_label);
+
+		dropdown.reset_label = new chai3d::cLabel(_joint_slider_font);
+		dropdown.reset_label->setFontScale(0.7);
+		dropdown.reset_label->m_fontColor.setWhite();
+		front_layer->addChild(dropdown.reset_label);
+
+		dropdown.top_border = new chai3d::cShapeLine();
+		dropdown.bottom_border = new chai3d::cShapeLine();
+		dropdown.left_border = new chai3d::cShapeLine();
+		dropdown.right_border = new chai3d::cShapeLine();
+		dropdown.separator_line = new chai3d::cShapeLine();
+		dropdown.reset_top_border = new chai3d::cShapeLine();
+		dropdown.reset_bottom_border = new chai3d::cShapeLine();
+		dropdown.reset_left_border = new chai3d::cShapeLine();
+		dropdown.reset_right_border = new chai3d::cShapeLine();
+		for (auto* line : {dropdown.top_border, dropdown.bottom_border,
+						   dropdown.left_border, dropdown.right_border,
+						   dropdown.separator_line, dropdown.reset_top_border,
+						   dropdown.reset_bottom_border,
+						   dropdown.reset_left_border,
+						   dropdown.reset_right_border}) {
+			line->setLineWidth(2.0);
+			line->m_colorPointA = chai3d::cColorf(0.82f, 0.85f, 0.88f);
+			line->m_colorPointB = chai3d::cColorf(0.82f, 0.85f, 0.88f);
+			front_layer->addChild(line);
+		}
+
+		dropdown.rows.reserve(kJointSliderMinVisibleRows);
+		for (int i = 0; i < kJointSliderMinVisibleRows; ++i) {
+			JointSliderRowVisual row = {};
+			row.name_label = new chai3d::cLabel(_joint_slider_font);
+			row.name_label->setFontScale(0.72);
+			row.name_label->m_fontColor.setWhite();
+			front_layer->addChild(row.name_label);
+
+			row.value_label = new chai3d::cLabel(_joint_slider_font);
+			row.value_label->setFontScale(0.68);
+			row.value_label->m_fontColor.setGrayGainsboro();
+			front_layer->addChild(row.value_label);
+
+			row.track_line = new chai3d::cShapeLine();
+			row.fill_line = new chai3d::cShapeLine();
+			row.handle_line = new chai3d::cShapeLine();
+			row.track_line->setLineWidth(2.0);
+			row.fill_line->setLineWidth(3.0);
+			row.handle_line->setLineWidth(4.0);
+			row.track_line->m_colorPointA = chai3d::cColorf(0.38f, 0.41f, 0.46f);
+			row.track_line->m_colorPointB = chai3d::cColorf(0.38f, 0.41f, 0.46f);
+			row.fill_line->m_colorPointA = chai3d::cColorf(0.30f, 0.69f, 0.95f);
+			row.fill_line->m_colorPointB = chai3d::cColorf(0.30f, 0.69f, 0.95f);
+			row.handle_line->m_colorPointA = chai3d::cColorf(0.95f, 0.96f, 0.98f);
+			row.handle_line->m_colorPointB = chai3d::cColorf(0.95f, 0.96f, 0.98f);
+			front_layer->addChild(row.track_line);
+			front_layer->addChild(row.fill_line);
+			front_layer->addChild(row.handle_line);
+
+			dropdown.rows.push_back(row);
+		}
+
+		_joint_slider_dropdowns[camera_name] = dropdown;
+	}
+}
+
+void SaiGraphics::syncJointSliderDropdownState() {
+	if (_joint_slider_robot_name.empty() && !_robot_models.empty()) {
+		_joint_slider_robot_name = _robot_models.begin()->first;
+	}
+	for (const auto& robot_entry : _robot_models) {
+		const auto& robot_name = robot_entry.first;
+		const auto& robot_model = robot_entry.second;
+		if (_joint_slider_values.find(robot_name) == _joint_slider_values.end()) {
+			_joint_slider_values[robot_name] = robot_model->q();
+		}
+		if (_joint_slider_override_active.find(robot_name) ==
+			_joint_slider_override_active.end()) {
+			_joint_slider_override_active[robot_name] = false;
+		}
+		if (!_joint_slider_override_active[robot_name]) {
+			_joint_slider_values[robot_name] = robot_model->q();
+		}
+	}
+	if (_joint_slider_robot_name.empty() ||
+		_robot_models.find(_joint_slider_robot_name) == _robot_models.end()) {
+		_joint_slider_robot_name =
+			_robot_models.empty() ? "" : _robot_models.begin()->first;
+	}
+	if (_joint_slider_robot_name.empty()) {
+		_joint_slider_scroll_index = 0;
+		return;
+	}
+	const int joint_count = static_cast<int>(
+		_robot_models.at(_joint_slider_robot_name)->jointLimits().size());
+	const int available_height =
+		std::max(0, _window_height - kJointSliderTopPx - kJointSliderBottomPx -
+						  kJointSliderHeaderHeightPx);
+	const int max_visible_rows = std::max(
+		1, static_cast<int>(std::floor(
+			   available_height / kJointSliderMinRowHeightPx)));
+	_joint_slider_scroll_index =
+		std::clamp(_joint_slider_scroll_index, 0,
+				   std::max(0, joint_count - max_visible_rows));
+}
+
+void SaiGraphics::showJointPositionSliders(bool show,
+											 const std::string& robot_name) {
+	_joint_slider_dropdown_enabled = show;
+	_joint_slider_dropdown_expanded = show;
+	_joint_slider_interaction_occurring = false;
+	_active_joint_slider_index = -1;
+
+	if (!robot_name.empty()) {
+		if (!robotExistsInWorld(robot_name)) {
+			throw std::invalid_argument(
+				"robot not found in SaiGraphics::showJointPositionSliders");
+		}
+		_joint_slider_robot_name = robot_name;
+	} else if (_joint_slider_robot_name.empty() && !_robot_models.empty()) {
+		_joint_slider_robot_name = _robot_models.begin()->first;
+	}
+
+	syncJointSliderDropdownState();
 }
 
 void SaiGraphics::updateMuscleTendonHoverLabel(const std::string& camera_name,
@@ -408,6 +691,478 @@ void SaiGraphics::updateMuscleTendonPathHighlight(
 			is_hovered_segment
 				? highlightedMuscleTendonLineWidth(segment.line_width)
 				: segment.line_width);
+	}
+}
+
+void SaiGraphics::updateJointFrameHoverLabel(const std::string& camera_name,
+											 const double cursorx,
+											 const double cursory,
+											 const int window_width_screen,
+											 const int window_height_screen) {
+	auto label_it = _joint_frame_hover_labels.find(camera_name);
+	if (label_it == _joint_frame_hover_labels.end()) {
+		return;
+	}
+
+	auto* hover_label = label_it->second;
+	hover_label->setShowEnabled(false);
+	if (_joint_frame_displays.empty() || window_width_screen <= 0 ||
+		window_height_screen <= 0) {
+		return;
+	}
+
+	const int viewx = floor(cursorx / window_width_screen * _window_width);
+	const int viewy = floor(cursory / window_height_screen * _window_height);
+	auto* camera = getCamera(camera_name);
+	_world->computeGlobalPositions(false);
+
+	const Eigen::Vector2d cursor_position(viewx, viewy);
+	const JointFrameDisplay* hovered_joint_frame = nullptr;
+	double best_distance = std::numeric_limits<double>::infinity();
+
+	for (const auto& joint_frame_display : _joint_frame_displays) {
+		if (joint_frame_display.link == nullptr ||
+			!joint_frame_display.link->getShowFrame()) {
+			continue;
+		}
+
+		const Eigen::Vector3d origin =
+			joint_frame_display.link->getGlobalPos().eigen();
+		const Eigen::Matrix3d rotation =
+			joint_frame_display.link->getGlobalRot().eigen();
+
+		double origin_x = 0.0;
+		double origin_y = 0.0;
+		double origin_depth = 0.0;
+		if (!projectWorldPointToViewport(camera, origin, _window_width,
+										 _window_height, origin_x, origin_y,
+										 origin_depth)) {
+			continue;
+		}
+
+		double joint_distance =
+			(cursor_position - Eigen::Vector2d(origin_x, origin_y)).norm();
+		for (int axis = 0; axis < 3; ++axis) {
+			const Eigen::Vector3d axis_endpoint =
+				origin + rotation.col(axis) *
+							 joint_frame_display.frame_pointer_length;
+			double axis_x = 0.0;
+			double axis_y = 0.0;
+			double axis_depth = 0.0;
+			if (!projectWorldPointToViewport(camera, axis_endpoint, _window_width,
+											 _window_height, axis_x, axis_y,
+											 axis_depth)) {
+				continue;
+			}
+			joint_distance = std::min(
+				joint_distance,
+				distanceToScreenSegment(cursor_position,
+										Eigen::Vector2d(origin_x, origin_y),
+										Eigen::Vector2d(axis_x, axis_y)));
+		}
+
+		const double hover_threshold =
+			std::max(10.0, 0.02 * _window_height + 8.0 / origin_depth);
+		if (joint_distance <= hover_threshold && joint_distance < best_distance) {
+			best_distance = joint_distance;
+			hovered_joint_frame = &joint_frame_display;
+		}
+	}
+
+	if (hovered_joint_frame == nullptr) {
+		return;
+	}
+
+	hover_label->setText(hovered_joint_frame->joint_name);
+	const int label_x =
+		std::min(std::max(0, viewx + 14),
+				 std::max(0, _window_width -
+									static_cast<int>(hover_label->getWidth())));
+	const int label_y = std::min(
+		std::max(0, _window_height - viewy + 18),
+		std::max(0, _window_height -
+						 static_cast<int>(hover_label->getHeight())));
+	hover_label->setLocalPos(label_x, label_y, 0);
+	hover_label->setShowEnabled(true);
+}
+
+bool SaiGraphics::updateJointSliderDropdown(const std::string& camera_name,
+											   const double cursorx,
+											   const double cursory,
+											   const int window_width_screen,
+											   const int window_height_screen,
+											   const double scroll_value) {
+	auto dropdown_it = _joint_slider_dropdowns.find(camera_name);
+	if (dropdown_it == _joint_slider_dropdowns.end()) {
+		return false;
+	}
+
+	auto& dropdown = dropdown_it->second;
+	const auto set_dropdown_visible = [&dropdown](const bool show_header,
+												 const bool show_rows) {
+		dropdown.title_label->setShowEnabled(show_header);
+		dropdown.state_label->setShowEnabled(show_header);
+		dropdown.reset_label->setShowEnabled(show_header);
+		for (auto* border : {dropdown.top_border, dropdown.bottom_border,
+							 dropdown.left_border, dropdown.right_border,
+							 dropdown.separator_line, dropdown.reset_top_border,
+							 dropdown.reset_bottom_border,
+							 dropdown.reset_left_border,
+							 dropdown.reset_right_border}) {
+			border->setShowEnabled(show_header);
+		}
+		for (auto& row : dropdown.rows) {
+			row.name_label->setShowEnabled(show_rows);
+			row.value_label->setShowEnabled(show_rows);
+			row.track_line->setShowEnabled(show_rows);
+			row.fill_line->setShowEnabled(show_rows);
+			row.handle_line->setShowEnabled(show_rows);
+		}
+	};
+
+	syncJointSliderDropdownState();
+	if (!_joint_slider_dropdown_enabled || _joint_slider_robot_name.empty()) {
+		set_dropdown_visible(false, false);
+		return false;
+	}
+
+	auto robot_it = _robot_models.find(_joint_slider_robot_name);
+	if (robot_it == _robot_models.end()) {
+		set_dropdown_visible(false, false);
+		return false;
+	}
+
+	const auto& robot_model = robot_it->second;
+	const auto& joint_limits = robot_model->jointLimits();
+	const auto values_it = _joint_slider_values.find(_joint_slider_robot_name);
+	if (values_it == _joint_slider_values.end()) {
+		set_dropdown_visible(false, false);
+		return false;
+	}
+	const auto& slider_values = values_it->second;
+
+	const int panel_x = kJointSliderLeftPx;
+	const int panel_y = kJointSliderTopPx;
+	const int header_top = panel_y;
+	const int header_bottom = panel_y + kJointSliderHeaderHeightPx;
+	const int expanded_panel_bottom =
+		std::max(header_bottom, _window_height - kJointSliderBottomPx);
+	const int available_rows_height =
+		std::max(0, expanded_panel_bottom - header_bottom);
+	const int max_visible_rows = std::max(
+		1, static_cast<int>(std::floor(
+			   available_rows_height / kJointSliderMinRowHeightPx)));
+	const int visible_rows = _joint_slider_dropdown_expanded
+								 ? std::min(max_visible_rows,
+											static_cast<int>(joint_limits.size()))
+								 : 0;
+	const double raw_row_height =
+		visible_rows > 0
+			? available_rows_height / static_cast<double>(visible_rows)
+			: kJointSliderMinRowHeightPx;
+	const double row_height =
+		std::clamp(raw_row_height, kJointSliderMinRowHeightPx,
+				   kJointSliderMaxRowHeightPx);
+	const int panel_bottom = _joint_slider_dropdown_expanded
+								 ? expanded_panel_bottom
+								 : header_bottom;
+	const auto local_y = [this](const double top_origin_y) {
+		return _window_height - top_origin_y;
+	};
+	const double title_font_scale =
+		std::clamp(0.3 + row_height / 30.0, 0.30, 0.40);
+	const double subtitle_font_scale =
+		std::clamp(0.3 + row_height / 34.0, 0.30, 0.40);
+	const double row_font_scale =
+		std::clamp(0.3 + row_height / 24.0, 0.38, 0.40);
+	const double value_font_scale =
+		std::clamp(0.3 + row_height / 26.0, 0.3, 0.40);
+	const double button_font_scale =
+		std::clamp(0.3 + row_height / 28.0, 0.3, 0.40);
+	const int reset_button_width = 74;
+	const int reset_button_height = 20;
+	const int reset_button_right = panel_x + kJointSliderWindowWidthPx - 10;
+	const int reset_button_left = reset_button_right - reset_button_width;
+	const int reset_button_top = panel_y + 6;
+	const int reset_button_bottom = reset_button_top + reset_button_height;
+
+	dropdown.title_label->setText("Joint Controls");
+	dropdown.title_label->setFontScale(title_font_scale);
+	dropdown.title_label->setLocalPos(panel_x + 10, local_y(panel_y + 18), 0);
+	dropdown.state_label->setText(
+		_joint_slider_robot_name +
+		std::string(_joint_slider_dropdown_expanded ? "  v" : "  >"));
+	dropdown.state_label->setFontScale(subtitle_font_scale);
+	dropdown.state_label->setLocalPos(panel_x + 150, local_y(panel_y + 18), 0);
+	dropdown.reset_label->setText("Reset");
+	dropdown.reset_label->setFontScale(button_font_scale);
+	dropdown.reset_label->setLocalPos(reset_button_left + 14,
+									  local_y(reset_button_top + 14), 0);
+	dropdown.reset_label->setShowEnabled(true);
+
+	dropdown.top_border->m_pointA =
+		chai3d::cVector3d(panel_x, local_y(header_top), 0);
+	dropdown.top_border->m_pointB = chai3d::cVector3d(
+		panel_x + kJointSliderWindowWidthPx, local_y(header_top), 0);
+	dropdown.bottom_border->m_pointA =
+		chai3d::cVector3d(panel_x, local_y(panel_bottom), 0);
+	dropdown.bottom_border->m_pointB = chai3d::cVector3d(
+		panel_x + kJointSliderWindowWidthPx, local_y(panel_bottom), 0);
+	dropdown.left_border->m_pointA =
+		chai3d::cVector3d(panel_x, local_y(header_top), 0);
+	dropdown.left_border->m_pointB =
+		chai3d::cVector3d(panel_x, local_y(panel_bottom), 0);
+	dropdown.right_border->m_pointA = chai3d::cVector3d(
+		panel_x + kJointSliderWindowWidthPx, local_y(header_top), 0);
+	dropdown.right_border->m_pointB = chai3d::cVector3d(
+		panel_x + kJointSliderWindowWidthPx, local_y(panel_bottom), 0);
+	dropdown.separator_line->m_pointA =
+		chai3d::cVector3d(panel_x, local_y(header_bottom), 0);
+	dropdown.separator_line->m_pointB = chai3d::cVector3d(
+		panel_x + kJointSliderWindowWidthPx, local_y(header_bottom), 0);
+	dropdown.reset_top_border->m_pointA =
+		chai3d::cVector3d(reset_button_left, local_y(reset_button_top), 0);
+	dropdown.reset_top_border->m_pointB =
+		chai3d::cVector3d(reset_button_right, local_y(reset_button_top), 0);
+	dropdown.reset_bottom_border->m_pointA =
+		chai3d::cVector3d(reset_button_left, local_y(reset_button_bottom), 0);
+	dropdown.reset_bottom_border->m_pointB =
+		chai3d::cVector3d(reset_button_right, local_y(reset_button_bottom), 0);
+	dropdown.reset_left_border->m_pointA =
+		chai3d::cVector3d(reset_button_left, local_y(reset_button_top), 0);
+	dropdown.reset_left_border->m_pointB =
+		chai3d::cVector3d(reset_button_left, local_y(reset_button_bottom), 0);
+	dropdown.reset_right_border->m_pointA =
+		chai3d::cVector3d(reset_button_right, local_y(reset_button_top), 0);
+	dropdown.reset_right_border->m_pointB =
+		chai3d::cVector3d(reset_button_right, local_y(reset_button_bottom), 0);
+
+	set_dropdown_visible(true, _joint_slider_dropdown_expanded);
+
+	const bool cursor_valid =
+		window_width_screen > 0 && window_height_screen > 0 && _window_width > 0 &&
+		_window_height > 0;
+	const double viewx =
+		cursor_valid ? cursorx / window_width_screen * _window_width : -1.0;
+	const double viewy =
+		cursor_valid ? cursory / window_height_screen * _window_height : -1.0;
+
+	const bool cursor_on_header =
+		cursor_valid && viewx >= panel_x &&
+		viewx <= panel_x + kJointSliderWindowWidthPx && viewy >= header_top &&
+		viewy <= header_bottom;
+	const bool cursor_on_reset =
+		cursor_valid && viewx >= reset_button_left &&
+		viewx <= reset_button_right && viewy >= reset_button_top &&
+		viewy <= reset_button_bottom;
+	const bool cursor_in_panel =
+		cursor_valid && viewx >= panel_x &&
+		viewx <= panel_x + kJointSliderWindowWidthPx && viewy >= header_top &&
+		viewy <= panel_bottom;
+	const bool left_mouse_first_press =
+		is_pressed(GLFW_MOUSE_BUTTON_LEFT) &&
+		mouse_button_presses_map.at(GLFW_MOUSE_BUTTON_LEFT).second;
+
+	bool consumed = false;
+	if (left_mouse_first_press && cursor_on_reset) {
+		mouse_button_presses_map.at(GLFW_MOUSE_BUTTON_LEFT).second = false;
+		auto default_it =
+			_joint_slider_default_values.find(_joint_slider_robot_name);
+		if (default_it != _joint_slider_default_values.end()) {
+			_joint_slider_values[_joint_slider_robot_name] = default_it->second;
+			_joint_slider_override_active[_joint_slider_robot_name] = true;
+		}
+		_active_joint_slider_index = -1;
+		_joint_slider_interaction_occurring = false;
+		consumed = true;
+	}
+	if (!consumed && left_mouse_first_press && cursor_on_header) {
+		mouse_button_presses_map.at(GLFW_MOUSE_BUTTON_LEFT).second = false;
+		_joint_slider_dropdown_expanded = !_joint_slider_dropdown_expanded;
+		_active_joint_slider_index = -1;
+		_joint_slider_interaction_occurring = false;
+		consumed = true;
+	}
+
+	if (_joint_slider_dropdown_expanded && cursor_in_panel &&
+		std::abs(scroll_value) > 1e-9 &&
+		joint_limits.size() > static_cast<size_t>(max_visible_rows)) {
+		const int direction = (scroll_value > 0.0) ? -1 : 1;
+		_joint_slider_scroll_index = std::clamp(
+			_joint_slider_scroll_index + direction, 0,
+			std::max(0, static_cast<int>(joint_limits.size()) -
+							 max_visible_rows));
+		consumed = true;
+	}
+
+	if (!is_pressed(GLFW_MOUSE_BUTTON_LEFT)) {
+		_active_joint_slider_index = -1;
+		_joint_slider_interaction_occurring = false;
+	}
+
+	while (static_cast<int>(dropdown.rows.size()) < visible_rows) {
+		JointSliderRowVisual row = {};
+		auto* front_layer = getCamera(camera_name)->m_frontLayer;
+		row.name_label = new chai3d::cLabel(_joint_slider_font);
+		row.name_label->m_fontColor.setWhite();
+		front_layer->addChild(row.name_label);
+
+		row.value_label = new chai3d::cLabel(_joint_slider_font);
+		row.value_label->m_fontColor.setGrayGainsboro();
+		front_layer->addChild(row.value_label);
+
+		row.track_line = new chai3d::cShapeLine();
+		row.fill_line = new chai3d::cShapeLine();
+		row.handle_line = new chai3d::cShapeLine();
+		row.track_line->m_colorPointA = chai3d::cColorf(0.38f, 0.41f, 0.46f);
+		row.track_line->m_colorPointB = chai3d::cColorf(0.38f, 0.41f, 0.46f);
+		row.fill_line->m_colorPointA = chai3d::cColorf(0.30f, 0.69f, 0.95f);
+		row.fill_line->m_colorPointB = chai3d::cColorf(0.30f, 0.69f, 0.95f);
+		row.handle_line->m_colorPointA = chai3d::cColorf(0.95f, 0.96f, 0.98f);
+		row.handle_line->m_colorPointB = chai3d::cColorf(0.95f, 0.96f, 0.98f);
+		front_layer->addChild(row.track_line);
+		front_layer->addChild(row.fill_line);
+		front_layer->addChild(row.handle_line);
+		dropdown.rows.push_back(row);
+	}
+
+	for (int row_index = 0; row_index < static_cast<int>(dropdown.rows.size());
+		 ++row_index) {
+		auto& row = dropdown.rows[row_index];
+		if (!_joint_slider_dropdown_expanded ||
+			row_index >= visible_rows ||
+			row_index >= static_cast<int>(joint_limits.size()) -
+							_joint_slider_scroll_index) {
+			row.name_label->setShowEnabled(false);
+			row.value_label->setShowEnabled(false);
+			row.track_line->setShowEnabled(false);
+			row.fill_line->setShowEnabled(false);
+			row.handle_line->setShowEnabled(false);
+			continue;
+		}
+
+		const int joint_limit_index = _joint_slider_scroll_index + row_index;
+		if (joint_limit_index >= static_cast<int>(joint_limits.size())) {
+			row.name_label->setShowEnabled(false);
+			row.value_label->setShowEnabled(false);
+			row.track_line->setShowEnabled(false);
+			row.fill_line->setShowEnabled(false);
+			row.handle_line->setShowEnabled(false);
+			continue;
+		}
+
+		const auto& limit = joint_limits[joint_limit_index];
+		if (limit.joint_index < 0 || limit.joint_index >= slider_values.size()) {
+			row.name_label->setShowEnabled(false);
+			row.value_label->setShowEnabled(false);
+			row.track_line->setShowEnabled(false);
+			row.fill_line->setShowEnabled(false);
+			row.handle_line->setShowEnabled(false);
+			continue;
+		}
+
+		const double dynamic_row_top = header_bottom + row_index * row_height;
+		const double dynamic_row_center_y = dynamic_row_top + 0.5 * row_height;
+		const int row_label_y = local_y(dynamic_row_center_y + 0.22 * row_height);
+		const auto [lower, upper] = sliderBoundsForJoint(slider_values, limit);
+		const double clamped_value =
+			clampSliderValue(slider_values(limit.joint_index), lower, upper);
+		const double slider_alpha =
+			(clamped_value - lower) / std::max(1e-9, upper - lower);
+		const double slider_x = kJointSliderTrackLeftPx +
+								slider_alpha *
+									(kJointSliderTrackRightPx - kJointSliderTrackLeftPx);
+
+		row.name_label->setText(limit.joint_name);
+		row.name_label->setFontScale(row_font_scale);
+		row.name_label->setLocalPos(panel_x + 10, row_label_y, 0);
+		row.name_label->setShowEnabled(true);
+
+		row.value_label->setText(formatSliderValue(clamped_value));
+		row.value_label->setFontScale(value_font_scale);
+		row.value_label->setLocalPos(panel_x + kJointSliderTrackRightPx + 10,
+									 row_label_y, 0);
+		row.value_label->setShowEnabled(true);
+
+		const double track_width =
+			std::clamp(0.10 * row_height, 2.0, 5.0);
+		const double fill_width =
+			std::clamp(0.15 * row_height, 3.0, 6.0);
+		const double handle_width =
+			std::clamp(0.18 * row_height, 4.0, 7.0);
+		const double handle_half_height =
+			std::clamp(0.33 * row_height, 7.0, 14.0);
+		row.track_line->setLineWidth(track_width);
+		row.fill_line->setLineWidth(fill_width);
+		row.handle_line->setLineWidth(handle_width);
+
+		row.track_line->m_pointA = chai3d::cVector3d(panel_x + kJointSliderTrackLeftPx,
+												local_y(dynamic_row_center_y), 0);
+		row.track_line->m_pointB = chai3d::cVector3d(panel_x + kJointSliderTrackRightPx,
+												local_y(dynamic_row_center_y), 0);
+		row.track_line->setShowEnabled(true);
+
+		row.fill_line->m_pointA = row.track_line->m_pointA;
+		row.fill_line->m_pointB =
+			chai3d::cVector3d(panel_x + slider_x, local_y(dynamic_row_center_y), 0);
+		row.fill_line->setShowEnabled(true);
+
+		row.handle_line->m_pointA =
+			chai3d::cVector3d(panel_x + slider_x,
+							  local_y(dynamic_row_center_y - handle_half_height), 0);
+		row.handle_line->m_pointB =
+			chai3d::cVector3d(panel_x + slider_x,
+							  local_y(dynamic_row_center_y + handle_half_height), 0);
+		row.handle_line->setShowEnabled(true);
+
+		if (!cursor_valid) {
+			continue;
+		}
+
+		const bool cursor_on_slider =
+			viewx >= panel_x + kJointSliderTrackLeftPx - 8 &&
+			viewx <= panel_x + kJointSliderTrackRightPx + 8 &&
+			std::abs(viewy - dynamic_row_center_y) <=
+				std::max(kJointSliderDragThresholdPx, 0.40 * row_height);
+
+		if (left_mouse_first_press && cursor_on_slider) {
+			mouse_button_presses_map.at(GLFW_MOUSE_BUTTON_LEFT).second = false;
+			_active_joint_slider_index = limit.joint_index;
+			_joint_slider_interaction_occurring = true;
+			consumed = true;
+		}
+
+		if (_active_joint_slider_index == limit.joint_index &&
+			is_pressed(GLFW_MOUSE_BUTTON_LEFT)) {
+			const double alpha = std::clamp(
+				(viewx - (panel_x + kJointSliderTrackLeftPx)) /
+					static_cast<double>(kJointSliderTrackRightPx -
+									   kJointSliderTrackLeftPx),
+				0.0, 1.0);
+			_joint_slider_values[_joint_slider_robot_name](limit.joint_index) =
+				lower + alpha * (upper - lower);
+			_joint_slider_override_active[_joint_slider_robot_name] = true;
+			_joint_slider_interaction_occurring = true;
+			consumed = true;
+		}
+	}
+
+	return consumed || cursor_in_panel || _joint_slider_interaction_occurring;
+}
+
+void SaiGraphics::applyJointSliderOverrides() {
+	syncJointSliderDropdownState();
+	for (const auto& override_entry : _joint_slider_override_active) {
+		if (!override_entry.second) {
+			continue;
+		}
+		const auto robot_it = _robot_models.find(override_entry.first);
+		const auto value_it = _joint_slider_values.find(override_entry.first);
+		if (robot_it == _robot_models.end() || value_it == _joint_slider_values.end()) {
+			continue;
+		}
+		updateRobotGraphics(override_entry.first, value_it->second,
+							robot_it->second->dq());
 	}
 }
 
@@ -938,8 +1693,14 @@ void SaiGraphics::renderGraphicsWorld() {
 		mouse_scroll_buffer.pop_front();
 	}
 
+	const bool joint_slider_consumed_input = updateJointSliderDropdown(
+		camera_name, cursorx, cursory, wwidth_scr, wheight_scr, scroll_value);
+	if (joint_slider_consumed_input) {
+		scroll_value = 0.0;
+	}
+
 	// 1 - mouse right button to generate a force/torque
-	if (is_pressed(GLFW_MOUSE_BUTTON_RIGHT)) {
+	if (!_joint_slider_interaction_occurring && is_pressed(GLFW_MOUSE_BUTTON_RIGHT)) {
 		if (consume_first_press(GLFW_MOUSE_BUTTON_RIGHT)) {
 			for (auto widget : _ui_force_widgets) {
 				widget->setEnable(true);
@@ -981,7 +1742,7 @@ void SaiGraphics::renderGraphicsWorld() {
 	}
 
 	// 2 - mouse left button for camera motion
-	if (!_right_click_interaction_occurring) {
+	if (!_right_click_interaction_occurring && !joint_slider_consumed_input) {
 		if (is_pressed(GLFW_MOUSE_BUTTON_LEFT)) {
 			if (is_pressed(GLFW_KEY_LEFT_CONTROL)) {
 				Eigen::Vector3d cam_motion =
@@ -1082,10 +1843,14 @@ void SaiGraphics::renderGraphicsWorld() {
 		setCameraPose(camera_name, camera_pose);
 	}
 
+	applyJointSliderOverrides();
+
 	// update shadow maps
 	_world->updateShadowMaps();
 	updateMuscleTendonHoverLabel(camera_name, cursorx, cursory, wwidth_scr,
 								   wheight_scr);
+	updateJointFrameHoverLabel(camera_name, cursorx, cursory, wwidth_scr,
+								 wheight_scr);
 
 	render(camera_name);
 }
@@ -1308,6 +2073,9 @@ cRobotLink* SaiGraphics::findLinkObjectInParentLinkRecursive(
 			} else {
 				ret_link =
 					findLinkObjectInParentLinkRecursive(child, link_name);
+				if (ret_link != NULL) {
+					break;
+				}
 			}
 		}
 	}
@@ -1352,6 +2120,18 @@ cRobotLink* SaiGraphics::findLink(const std::string& robot_name,
 		}
 	}
 	return target_link;
+}
+
+const cRobotLink* SaiGraphics::findParentRobotLink(
+	const cGenericObject* object) const {
+	while (object != nullptr) {
+		auto* link = dynamic_cast<const cRobotLink*>(object);
+		if (link != nullptr) {
+			return link;
+		}
+		object = object->getParent();
+	}
+	return nullptr;
 }
 
 void SaiGraphics::showLinkFrameRecursive(cRobotLink* parent, bool show_frame,
@@ -1403,6 +2183,48 @@ void SaiGraphics::showLinkFrame(bool show_frame,
 		auto target_link = findLink(robot_or_object_name, link_name);
 		target_link->setFrameSize(frame_pointer_length, false);
 		target_link->setShowFrame(show_frame, false);
+	}
+}
+
+void SaiGraphics::showMovableJointFrames(
+	bool show_frame, const std::string& robot_name,
+	const double frame_pointer_length, const bool show_joint_name_on_hover) {
+	const auto robot_it = _robot_models.find(robot_name);
+	if (robot_it == _robot_models.end()) {
+		cerr << "Could not find robot model in graphics world: " << robot_name
+			 << ". Cannot show movable joint frames." << endl;
+		abort();
+	}
+
+	_joint_frame_displays.erase(
+		std::remove_if(_joint_frame_displays.begin(), _joint_frame_displays.end(),
+					   [&](const JointFrameDisplay& joint_frame_display) {
+						   return joint_frame_display.robot_name == robot_name;
+					   }),
+		_joint_frame_displays.end());
+
+	std::unordered_set<std::string> visited_child_links;
+	for (const auto& joint_name : robot_it->second->jointNames()) {
+		const auto child_link_name = robot_it->second->childLinkName(joint_name);
+		if (child_link_name.empty() ||
+			!visited_child_links.insert(child_link_name).second) {
+			continue;
+		}
+
+		auto* target_link = findLink(robot_name, child_link_name);
+		if (target_link == NULL) {
+			cerr << "Could not find child link '" << child_link_name
+				 << "' for movable joint '" << joint_name << "' on robot '"
+				 << robot_name << "'. Skipping frame display for this joint."
+				 << endl;
+			continue;
+		}
+		target_link->setFrameSize(frame_pointer_length, false);
+		target_link->setShowFrame(show_frame, false);
+		if (show_frame && show_joint_name_on_hover) {
+			_joint_frame_displays.push_back(
+				{robot_name, joint_name, target_link, frame_pointer_length});
+		}
 	}
 }
 

@@ -12,4 +12,4 @@ TARGET_LINK_LIBRARIES (${EXAMPLE_NAME}
 # NOTE: this requires an install build
 SET(RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
 FILE(MAKE_DIRECTORY ${RESOURCE_DIR})
-FILE(COPY graphics human.urdf muscles_fixed.xml DESTINATION ${RESOURCE_DIR})
+FILE(COPY graphics muscles.xml models/rajagopal_model/Rajagopal2015.urdf models/rajagopal_model/Geometry DESTINATION ${RESOURCE_DIR})

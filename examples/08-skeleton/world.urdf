@@ -2,9 +2,9 @@
 
 <world name="demo_world" gravity="0.0 0.0 -9.81">
 
-	<robot name="human">
+	<robot name="Rajagopal2015">
 		<!-- model node is required -->
-		<model dir="./resources/" path="human.urdf" name="human" />
+		<model dir="./resources/" path="Rajagopal2015.urdf" name="Rajagopal2015" />
 		<!-- origin node is optional -->
 		<origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
 	</robot>

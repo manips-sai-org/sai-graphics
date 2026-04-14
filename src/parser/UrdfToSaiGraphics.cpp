@@ -21,12 +21,16 @@ typedef my_shared_ptr<SaiUrdfreader::World> WorldPtr;
 #include <Eigen/Core>
 using namespace Eigen;
 
+#include <algorithm>
 #include <assert.h>
+#include <cctype>
 
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <stack>
+#include <string>
 #include <vector>
 using namespace std;
 
@@ -55,6 +59,207 @@ static cGenericObject* getGenericObjectChildRecursive(
 		}
 	}
 	return NULL;
+}
+
+static bool readTextFile(const std::string& filepath, std::string& contents) {
+	std::ifstream input(filepath);
+	if (!input) {
+		return false;
+	}
+	std::ostringstream buffer;
+	buffer << input.rdbuf();
+	contents = buffer.str();
+	return true;
+}
+
+static bool extractTagContent(
+	const std::string& xml, const std::string& tag_name, std::string& content) {
+	const std::string open_tag = "<" + tag_name;
+	const auto open_pos = xml.find(open_tag);
+	if (open_pos == std::string::npos) {
+		return false;
+	}
+	const auto content_start = xml.find(">", open_pos);
+	if (content_start == std::string::npos) {
+		return false;
+	}
+	const std::string close_tag = "</" + tag_name + ">";
+	const auto close_pos = xml.find(close_tag, content_start + 1);
+	if (close_pos == std::string::npos) {
+		return false;
+	}
+	content = xml.substr(content_start + 1, close_pos - content_start - 1);
+	return true;
+}
+
+static bool extractFirstDataArrayText(
+	const std::string& xml, std::string& content) {
+	const auto open_pos = xml.find("<DataArray");
+	if (open_pos == std::string::npos) {
+		return false;
+	}
+	const auto content_start = xml.find(">", open_pos);
+	if (content_start == std::string::npos) {
+		return false;
+	}
+	const auto close_pos = xml.find("</DataArray>", content_start + 1);
+	if (close_pos == std::string::npos) {
+		return false;
+	}
+	const std::string open_tag =
+		xml.substr(open_pos, content_start - open_pos + 1);
+	if (open_tag.find("format=\"ascii\"") == std::string::npos &&
+		open_tag.find("format='ascii'") == std::string::npos) {
+		return false;
+	}
+	content = xml.substr(content_start + 1, close_pos - content_start - 1);
+	return true;
+}
+
+static bool extractNamedDataArrayText(
+	const std::string& xml, const std::string& name, std::string& content) {
+	size_t search_pos = 0;
+	while (search_pos < xml.size()) {
+		const auto open_pos = xml.find("<DataArray", search_pos);
+		if (open_pos == std::string::npos) {
+			return false;
+		}
+		const auto content_start = xml.find(">", open_pos);
+		if (content_start == std::string::npos) {
+			return false;
+		}
+		const std::string open_tag =
+			xml.substr(open_pos, content_start - open_pos + 1);
+		const bool matches_name =
+			open_tag.find("Name=\"" + name + "\"") != std::string::npos ||
+			open_tag.find("Name='" + name + "'") != std::string::npos;
+		const bool is_ascii =
+			open_tag.find("format=\"ascii\"") != std::string::npos ||
+			open_tag.find("format='ascii'") != std::string::npos;
+		if (matches_name && is_ascii) {
+			const auto close_pos = xml.find("</DataArray>", content_start + 1);
+			if (close_pos == std::string::npos) {
+				return false;
+			}
+			content =
+				xml.substr(content_start + 1, close_pos - content_start - 1);
+			return true;
+		}
+		search_pos = content_start + 1;
+	}
+	return false;
+}
+
+template <typename NumberType>
+static bool parseNumberList(
+	const std::string& text, std::vector<NumberType>& values) {
+	std::stringstream buffer(text);
+	NumberType value;
+	values.clear();
+	while (buffer >> value) {
+		values.push_back(value);
+	}
+	return !values.empty();
+}
+
+static bool loadVTPFile(
+	chai3d::cMultiMesh* multi_mesh, const std::string& filepath) {
+	std::string xml;
+	if (!readTextFile(filepath, xml)) {
+		return false;
+	}
+
+	std::string points_section;
+	std::string polys_section;
+	if (!extractTagContent(xml, "Points", points_section) ||
+		!extractTagContent(xml, "Polys", polys_section)) {
+		return false;
+	}
+
+	std::string points_text;
+	std::string connectivity_text;
+	std::string offsets_text;
+	if (!extractFirstDataArrayText(points_section, points_text) ||
+		!extractNamedDataArrayText(polys_section, "connectivity",
+								   connectivity_text) ||
+		!extractNamedDataArrayText(polys_section, "offsets", offsets_text)) {
+		return false;
+	}
+
+	std::vector<double> points;
+	std::vector<double> normals;
+	std::vector<int> connectivity;
+	std::vector<int> offsets;
+	if (!parseNumberList(points_text, points) || points.size() % 3 != 0 ||
+		!parseNumberList(connectivity_text, connectivity) ||
+		!parseNumberList(offsets_text, offsets)) {
+		return false;
+	}
+
+	std::string point_data_section;
+	std::string normals_text;
+	if (extractTagContent(xml, "PointData", point_data_section) &&
+		extractNamedDataArrayText(point_data_section, "Normals",
+								  normals_text)) {
+		if (!parseNumberList(normals_text, normals) ||
+			normals.size() != points.size()) {
+			normals.clear();
+		}
+	}
+
+	auto mesh = new cMesh();
+	const cColorf white(1.0, 1.0, 1.0, 1.0);
+	const size_t num_points = points.size() / 3;
+	std::vector<int> vertex_indices(num_points, -1);
+	for (size_t i = 0; i < num_points; ++i) {
+		const cVector3d point(points[3 * i], points[3 * i + 1],
+							  points[3 * i + 2]);
+		cVector3d normal(0.0, 0.0, 1.0);
+		if (normals.size() == points.size()) {
+			normal = cVector3d(normals[3 * i], normals[3 * i + 1],
+							   normals[3 * i + 2]);
+		}
+		vertex_indices[i] =
+			mesh->newVertex(point, normal, cVector3d(0, 0, 0), white);
+	}
+
+	bool created_triangle = false;
+	int polygon_start = 0;
+	for (const int polygon_end : offsets) {
+		if (polygon_end < polygon_start ||
+			polygon_end > static_cast<int>(connectivity.size())) {
+			return false;
+		}
+		if (polygon_end - polygon_start >= 3) {
+			const int root_vertex = connectivity[polygon_start];
+			if (root_vertex < 0 ||
+				root_vertex >= static_cast<int>(vertex_indices.size())) {
+				return false;
+			}
+			for (int i = polygon_start + 1; i + 1 < polygon_end; ++i) {
+				const int vertex1 = connectivity[i];
+				const int vertex2 = connectivity[i + 1];
+				if (vertex1 < 0 || vertex2 < 0 ||
+					vertex1 >= static_cast<int>(vertex_indices.size()) ||
+					vertex2 >= static_cast<int>(vertex_indices.size())) {
+					return false;
+				}
+				mesh->newTriangle(vertex_indices[root_vertex],
+								  vertex_indices[vertex1],
+								  vertex_indices[vertex2]);
+				created_triangle = true;
+			}
+		}
+		polygon_start = polygon_end;
+	}
+
+	if (!created_triangle ||
+		polygon_start != static_cast<int>(connectivity.size())) {
+		return false;
+	}
+
+	multi_mesh->addMesh(mesh);
+	return true;
 }
 
 // internal helper function to load a SaiUrdfreader::Visual to a cGenericObject
@@ -96,7 +301,7 @@ static void loadVisualtoGenericObject(
 		}
 
 		if (processed_filepath.length() < 5) {
-			cerr << "Couldn't load obj/3ds/STL robot link file, extension not "
+			cerr << "Couldn't load obj/3ds/STL/VTP robot link file, extension not "
 					"supported: "
 				 << processed_filepath << endl;
 			abort();
@@ -113,9 +318,11 @@ static void loadVisualtoGenericObject(
 			file_load_success = cLoadFileOBJ(tmp_mmesh, processed_filepath);
 		} else if (extension == ".3ds") {
 			file_load_success = cLoadFile3DS(tmp_mmesh, processed_filepath);
+		} else if (extension == ".vtp") {
+			file_load_success = loadVTPFile(tmp_mmesh, processed_filepath);
 		}
 		if (!file_load_success) {
-			cerr << "Couldn't load obj/3ds/STL robot link file: "
+			cerr << "Couldn't load obj/3ds/STL/VTP robot link file: "
 				 << processed_filepath << endl;
 			abort();
 		}

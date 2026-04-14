@@ -207,6 +207,23 @@ public:
 					   const double frame_pointer_length = 0.20);
 
 	/**
+	 * @brief Show or hide the frame associated with every movable joint on a
+	 * robot. Each frame is rendered on the child link attached to a non-fixed
+	 * joint in the robot model.
+	 *
+	 * @param show_frame Flag whether the joint frames should be shown or
+	 * hidden.
+	 * @param robot_name Robot name.
+	 * @param frame_pointer_length Axis arrow length in meters.
+	 * @param show_joint_name_on_hover Flag whether hovering a displayed joint
+	 * frame should show the joint name in the visualizer.
+	 */
+	void showMovableJointFrames(bool show_frame,
+								const std::string& robot_name,
+								const double frame_pointer_length = 0.20,
+								const bool show_joint_name_on_hover = false);
+
+	/**
 	 * @brief Render wire mesh for a particular link or all links on a robot.
 	 * @param show_wiremesh Flag whether should show wire mesh or not.
 	 * @param robot_name Robot name.
@@ -352,6 +369,17 @@ public:
 	 */
 	void updateMuscleTendonPathDisplay();
 
+	/**
+	 * @brief Show or hide a drop-down slider window for adjusting robot joint
+	 * positions directly in the visualizer.
+	 *
+	 * @param show true to enable the slider window, false to hide it.
+	 * @param robot_name optional robot name. If empty, the first loaded robot is
+	 * selected.
+	 */
+	void showJointPositionSliders(bool show,
+								  const std::string& robot_name = "");
+
 	/// @brief returns true if the given key is pressed, false otherwise
 	bool isKeyPressed(int key) const {
 		return glfwGetKey(_window, key) == GLFW_PRESS;
@@ -426,8 +454,29 @@ private:
 										  const int window_width_screen,
 										  const int window_height_screen);
 
+	void initializeJointFrameHoverLabels();
+
+	void updateJointFrameHoverLabel(const std::string& camera_name,
+									const double cursorx,
+									const double cursory,
+									const int window_width_screen,
+									const int window_height_screen);
+
 	void updateMuscleTendonPathHighlight(const std::string& robot_name,
 										 const std::string& muscle_name);
+
+	void initializeJointSliderDropdowns();
+
+	void syncJointSliderDropdownState();
+
+	bool updateJointSliderDropdown(const std::string& camera_name,
+								   const double cursorx,
+								   const double cursory,
+								   const int window_width_screen,
+								   const int window_height_screen,
+								   const double scroll_value);
+
+	void applyJointSliderOverrides();
 
 	/**
 	 * @brief initialize the glfw window with the given window name
@@ -522,6 +571,9 @@ private:
 	int findForceSensorDisplay(const std::string& robot_or_object_name,
 							   const std::string& link_name) const;
 
+	const chai3d::cRobotLink* findParentRobotLink(
+		const chai3d::cGenericObject* object) const;
+
 	struct MuscleTendonPathSegmentDisplay {
 		std::string robot_name;
 		std::string muscle_name;
@@ -537,6 +589,37 @@ private:
 		std::string muscle_name;
 		SaiModel::Waypoint waypoint;
 		chai3d::cShapeSphere* sphere;
+	};
+
+	struct JointFrameDisplay {
+		std::string robot_name;
+		std::string joint_name;
+		chai3d::cRobotLink* link;
+		double frame_pointer_length;
+	};
+
+	struct JointSliderRowVisual {
+		chai3d::cLabel* name_label;
+		chai3d::cLabel* value_label;
+		chai3d::cShapeLine* track_line;
+		chai3d::cShapeLine* fill_line;
+		chai3d::cShapeLine* handle_line;
+	};
+
+	struct JointSliderDropdownVisual {
+		chai3d::cLabel* title_label;
+		chai3d::cLabel* state_label;
+		chai3d::cLabel* reset_label;
+		chai3d::cShapeLine* top_border;
+		chai3d::cShapeLine* bottom_border;
+		chai3d::cShapeLine* left_border;
+		chai3d::cShapeLine* right_border;
+		chai3d::cShapeLine* separator_line;
+		chai3d::cShapeLine* reset_top_border;
+		chai3d::cShapeLine* reset_bottom_border;
+		chai3d::cShapeLine* reset_left_border;
+		chai3d::cShapeLine* reset_right_border;
+		std::vector<JointSliderRowVisual> rows;
 	};
 
 	/// @brief pointer to the chai3d world
@@ -581,6 +664,48 @@ private:
 
 	/// @brief font used for tendon hover labels
 	chai3d::cFontPtr _muscle_tendon_hover_font;
+
+	/// @brief front-layer hover labels keyed by camera name for joint frames
+	std::map<std::string, chai3d::cLabel*> _joint_frame_hover_labels;
+
+	/// @brief font used for joint-frame hover labels
+	chai3d::cFontPtr _joint_frame_hover_font;
+
+	/// @brief movable joint frame displays that should show hover names
+	std::vector<JointFrameDisplay> _joint_frame_displays;
+
+	/// @brief front-layer joint slider widgets keyed by camera name
+	std::map<std::string, JointSliderDropdownVisual> _joint_slider_dropdowns;
+
+	/// @brief font used by joint slider controls
+	chai3d::cFontPtr _joint_slider_font;
+
+	/// @brief whether the joint slider dropdown is enabled
+	bool _joint_slider_dropdown_enabled;
+
+	/// @brief whether the joint slider dropdown is expanded
+	bool _joint_slider_dropdown_expanded;
+
+	/// @brief robot currently controlled by the dropdown
+	std::string _joint_slider_robot_name;
+
+	/// @brief current slider values for each robot
+	std::map<std::string, Eigen::VectorXd> _joint_slider_values;
+
+	/// @brief startup joint positions for each robot used by the reset button
+	std::map<std::string, Eigen::VectorXd> _joint_slider_default_values;
+
+	/// @brief whether a robot currently has an explicit slider override
+	std::map<std::string, bool> _joint_slider_override_active;
+
+	/// @brief current vertical scroll offset in rows
+	int _joint_slider_scroll_index;
+
+	/// @brief q index being actively dragged, or -1 if none
+	int _active_joint_slider_index;
+
+	/// @brief true while the dropdown is actively consuming pointer interaction
+	bool _joint_slider_interaction_occurring;
 
 	/// @brief vector of camera names in the world
 	std::vector<std::string> _camera_names;
