@@ -23,6 +23,7 @@ using namespace Eigen;
 
 #include <assert.h>
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -551,6 +552,17 @@ namespace Parser
 		}
 
 		// parse lights
+		size_t num_directional_lights = 0;
+		for (const auto &light_pair : urdf_world->graphics_.lights)
+		{
+			if (light_pair.second->type == "directional")
+			{
+				num_directional_lights++;
+			}
+		}
+		const float directional_light_scale =
+			1.0f / std::max<size_t>(1, num_directional_lights);
+
 		for (const auto light_pair : urdf_world->graphics_.lights)
 		{
 			const auto light_ptr = light_pair.second;
@@ -562,17 +574,34 @@ namespace Parser
 				{
 					// create a directional light source
 					light = new cDirectionalLight(world);
+					light->m_ambient.set(0.16f * directional_light_scale,
+										 0.16f * directional_light_scale,
+										 0.16f * directional_light_scale, 1.0f);
+					light->m_diffuse.set(0.80f * directional_light_scale,
+										 0.80f * directional_light_scale,
+										 0.80f * directional_light_scale, 1.0f);
+					light->m_specular.set(0.18f * directional_light_scale,
+										  0.18f * directional_light_scale,
+										  0.18f * directional_light_scale, 1.0f);
 					// TODO: support link mounted light
 				}
 				else if (light_ptr->type == "spot")
 				{
 					cSpotLight *spot_light = new cSpotLight(world);
-					;
-					// enable shadow casting
+					spot_light->m_ambient.set(0.03f, 0.03f, 0.03f, 1.0f);
+					spot_light->m_diffuse.set(0.85f, 0.85f, 0.85f, 1.0f);
+					spot_light->m_specular.set(0.22f, 0.22f, 0.22f, 1.0f);
+					spot_light->setCutOffAngleDeg(55.0f);
+					spot_light->setSpotExponent(6.0f);
+					spot_light->setAttConstant(0.9f);
+					spot_light->setAttLinear(0.03f);
+					spot_light->setAttQuadratic(0.0f);
+					spot_light->setShadowMapProperties(0.1, 60.0);
 					spot_light->setShadowMapEnabled(true);
 					// up cast to cDirectionalLight
 					light = dynamic_cast<cDirectionalLight *>(spot_light);
 				}
+				light->setUseTwoSideLightModel(false);
 
 				light->setLocalPos(cVector3d(light_ptr->position.x,
 											 light_ptr->position.y,
