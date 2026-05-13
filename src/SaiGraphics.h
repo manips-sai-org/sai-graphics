@@ -480,6 +480,12 @@ namespace SaiGraphics
 		//! Adds 2D text to the specified camera's front layer and returns a pointer to the label
 		chai3d::cLabel *addText(const std::string &camera_name, const std::string &text, double x, double y);
 
+		/**
+		 * @brief Get pointer to Chai camera object.
+		 * @param camera_name Camera name.
+		 */
+		chai3d::cCamera *getCamera(const std::string &camera_name);
+
 	private:
 		bool _fullscreen = false;
 		bool _show_collision_meshes = false;
@@ -543,11 +549,6 @@ namespace SaiGraphics
 								   const Eigen::Vector3d &vertical,
 								   const Eigen::Vector3d &lookat);
 		/* CHAI specific interface */
-		/**
-		 * @brief Get pointer to Chai camera object.
-		 * @param camera_name Camera name.
-		 */
-		chai3d::cCamera *getCamera(const std::string &camera_name);
 
 		/**
 		 * @brief find the link object in the parent link recursively (called by the
