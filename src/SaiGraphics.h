@@ -486,6 +486,8 @@ namespace SaiGraphics
 		 */
 		chai3d::cCamera *getCamera(const std::string &camera_name);
 
+		std::vector<std::string> getCameraNames() const { return _camera_names; }
+
 	private:
 		bool _fullscreen = false;
 		bool _show_collision_meshes = false;
