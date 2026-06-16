@@ -386,6 +386,44 @@ public:
 	}
 
 	/**
+	 * @brief Add a 2D overlay label to a camera front layer.
+	 *
+	 * @param label_name unique label name
+	 * @param text label text
+	 * @param camera_name camera on which to display the label. If empty, the
+	 * current camera is used.
+	 * @param x_px x position in pixels from the left edge
+	 * @param y_from_top_px y position in pixels from the top edge
+	 * @param font_scale label font scale
+	 */
+	void addOverlayLabel(const std::string& label_name,
+						 const std::string& text,
+						 const std::string& camera_name = "",
+						 const int x_px = 20,
+						 const int y_from_top_px = 40,
+						 const double font_scale = 1.0);
+
+	/**
+	 * @brief Update an existing 2D overlay label.
+	 *
+	 * @param label_name unique label name
+	 * @param text label text
+	 * @param red red text color component in [0, 1]
+	 * @param green green text color component in [0, 1]
+	 * @param blue blue text color component in [0, 1]
+	 */
+	void updateOverlayLabel(const std::string& label_name,
+							const std::string& text,
+							const double red = 1.0,
+							const double green = 1.0,
+							const double blue = 1.0);
+
+	/**
+	 * @brief Show or hide an existing 2D overlay label.
+	 */
+	void showOverlayLabel(const std::string& label_name, const bool show);
+
+	/**
 	 * @brief Enable or disable rendering for a robot or object in the world. Of
 	 * the rendering is disabled, the object will not be displayed in the
 	 * visualizer window.
@@ -477,6 +515,8 @@ private:
 								   const double scroll_value);
 
 	void applyJointSliderOverrides();
+
+	void updateOverlayLabelPositions();
 
 	/**
 	 * @brief initialize the glfw window with the given window name
@@ -679,6 +719,19 @@ private:
 
 	/// @brief font used by joint slider controls
 	chai3d::cFontPtr _joint_slider_font;
+
+	struct OverlayLabelDisplay {
+		std::string camera_name;
+		int x_px;
+		int y_from_top_px;
+		chai3d::cLabel* label;
+	};
+
+	/// @brief front-layer overlay labels keyed by user-defined name
+	std::map<std::string, OverlayLabelDisplay> _overlay_labels;
+
+	/// @brief font used by overlay labels
+	chai3d::cFontPtr _overlay_label_font;
 
 	/// @brief whether the joint slider dropdown is enabled
 	bool _joint_slider_dropdown_enabled;

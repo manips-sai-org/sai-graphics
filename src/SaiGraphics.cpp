@@ -415,7 +415,7 @@ void SaiGraphics::initializeWorld(const std::string& path_to_world_file,
 		_joint_slider_values[robot_filename.first] =
 			_robot_models[robot_filename.first]->q();  
 		_joint_slider_default_values[robot_filename.first] =
-			_robot_models[robot_filename.first]->q() * 0; // hard-code to zero
+			_robot_models[robot_filename.first]->q() * 0;  // hard-code to zero
 		_joint_slider_override_active[robot_filename.first] = false;
 		updateRobotGraphics(robot_filename.first,
 							_robot_models[robot_filename.first]->q());
@@ -449,6 +449,8 @@ void SaiGraphics::clearWorld() {
 	_joint_frame_displays.clear();
 	_joint_slider_dropdowns.clear();
 	_joint_slider_font.reset();
+	_overlay_labels.clear();
+	_overlay_label_font.reset();
 	_joint_slider_values.clear();
 	_joint_slider_default_values.clear();
 	_joint_slider_override_active.clear();
@@ -481,6 +483,65 @@ void SaiGraphics::initializeJointFrameHoverLabels() {
 		hover_label->setShowEnabled(false);
 		getCamera(camera_name)->m_frontLayer->addChild(hover_label);
 		_joint_frame_hover_labels[camera_name] = hover_label;
+	}
+}
+
+void SaiGraphics::addOverlayLabel(const std::string& label_name,
+								  const std::string& text,
+								  const std::string& camera_name,
+								  const int x_px,
+								  const int y_from_top_px,
+								  const double font_scale) {
+	if (_overlay_labels.find(label_name) != _overlay_labels.end()) {
+		throw std::invalid_argument(
+			"overlay label already exists in SaiGraphics::addOverlayLabel");
+	}
+	const std::string label_camera_name =
+		camera_name.empty() ? getCurrentCameraName() : camera_name;
+	if (!_overlay_label_font) {
+		_overlay_label_font = NEW_CFONTCALIBRI20();
+	}
+
+	auto* label = new chai3d::cLabel(_overlay_label_font);
+	label->setText(text);
+	label->setFontScale(font_scale);
+	label->m_fontColor.setWhite();
+	label->setShowEnabled(true);
+	getCamera(label_camera_name)->m_frontLayer->addChild(label);
+
+	_overlay_labels[label_name] =
+		OverlayLabelDisplay{label_camera_name, x_px, y_from_top_px, label};
+	updateOverlayLabelPositions();
+}
+
+void SaiGraphics::updateOverlayLabel(const std::string& label_name,
+									 const std::string& text,
+									 const double red,
+									 const double green,
+									 const double blue) {
+	if (_overlay_labels.find(label_name) == _overlay_labels.end()) {
+		throw std::invalid_argument(
+			"overlay label not found in SaiGraphics::updateOverlayLabel");
+	}
+	auto* label = _overlay_labels.at(label_name).label;
+	label->setText(text);
+	label->m_fontColor.set(red, green, blue);
+}
+
+void SaiGraphics::showOverlayLabel(const std::string& label_name,
+								   const bool show) {
+	if (_overlay_labels.find(label_name) == _overlay_labels.end()) {
+		throw std::invalid_argument(
+			"overlay label not found in SaiGraphics::showOverlayLabel");
+	}
+	_overlay_labels.at(label_name).label->setShowEnabled(show);
+}
+
+void SaiGraphics::updateOverlayLabelPositions() {
+	for (const auto& overlay_label_pair : _overlay_labels) {
+		const auto& overlay_label = overlay_label_pair.second;
+		const int y_px = std::max(0, _window_height - overlay_label.y_from_top_px);
+		overlay_label.label->setLocalPos(overlay_label.x_px, y_px, 0);
 	}
 }
 
@@ -1844,6 +1905,8 @@ void SaiGraphics::renderGraphicsWorld() {
 	}
 
 	applyJointSliderOverrides();
+
+	updateOverlayLabelPositions();
 
 	// update shadow maps
 	_world->updateShadowMaps();
